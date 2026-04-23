@@ -3,9 +3,11 @@
 #include <list>
 #include <iostream>
 
+#include "item.hpp"
 #include "file.hpp"
 
-class directory : public file{
+
+class directory : public item{
 
 public:
     void addDirectory(std::string newDirectoryName); 
@@ -13,6 +15,8 @@ public:
 
     void delDirectory(std::string directoryName);
     void delFile(std::string fileName);
+
+
 
 private:
     std::list<directory> subDirectoryList;
