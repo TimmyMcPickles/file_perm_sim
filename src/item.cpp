@@ -3,31 +3,35 @@
 
 //Get Functions
 
-std::string item::getName() {
+std::string item::getName() const {
     return name;
 }
 
-std::string item::getOwnerName() {
+std::string item::getOwnerName() const {
     return ownerUser;
 }
 
-int item::getOwnerUID() {
+int item::getOwnerUID() const {
     return ownerUID;
 }
-std::string item::getOwnerGroup() {
+std::string item::getOwnerGroup() const {
     return ownerGroup;
 }
 
-int item::getOwnerGID() {
+int item::getOwnerGID() const {
     return ownerGID;
 }
 
-int item::getPerm() {
+int item::getPerm() const {
     return perm;
 }
 
 
 //Set Functions
+
+void item::setName(std::string newName) {
+    name = newName;
+}
 
 void item::setPerm(int newPerm) {
     //check to make sure passed int is valid

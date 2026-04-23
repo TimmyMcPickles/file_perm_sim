@@ -1,20 +1,20 @@
 #pragma once
 #include <string>
-#include <list>
 #include <iostream>
 
 class item{
 
 public:
     //get Functions
-    std::string getName();
-    std::string getOwnerName();
-    int getOwnerUID();
-    std::string getOwnerGroup();
-    int getOwnerGID();
-    int getPerm();
+    std::string getName() const;
+    std::string getOwnerName() const;
+    int getOwnerUID() const;
+    std::string getOwnerGroup() const;
+    int getOwnerGID() const;
+    int getPerm() const;
 
     //set Functions
+    void setName(std::string newName);
     void setOwnerUser(std::string newOwnerName);
     void setOwnerUser(int newOwnerUID);
     void setPerm(int newPerm);
