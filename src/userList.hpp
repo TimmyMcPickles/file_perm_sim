@@ -4,5 +4,8 @@
 
 class userList{
     public:
+    userList();
+
     private:
+    std::vector<user> list;
 };
