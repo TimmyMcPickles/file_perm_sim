@@ -6,7 +6,11 @@ group::group(std::string name, int id){
     gid = id;
 }
 
-int group::getGID(){return gid;}
+const std::string group::getGroupName(){
+    return groupName;
+}
+
+const int group::getGID(){return gid;}
 
 void group::setGID(int id){
     gid = id;

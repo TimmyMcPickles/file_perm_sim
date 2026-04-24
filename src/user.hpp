@@ -3,8 +3,13 @@
 
 class user{
 public:
+
+    // Getters
     user(std::string username, int id);
-    int getUID();
+    const int getUID();
+    const std::string getUsername();
+
+    // Setters
     void setUID(int id);
     void setUsername(std::string username);
 private:

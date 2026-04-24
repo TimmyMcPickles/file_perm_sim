@@ -1,12 +1,17 @@
 #pragma once
 #include "user.hpp"
+#include <string>
 
 user::user(std::string username, int id){
     setUID(id);
     setUsername(username);
 }
 
-int user::getUID(){
+const std::string user::getUsername(){
+    return username;
+}
+
+const int user::getUID(){
     return uid;
 }
 
