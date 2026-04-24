@@ -13,13 +13,13 @@ class directory : public item{
 public:
     directory(std::string newDirectoryName, const user& ownerUser, const directory* parentDirectory);
 
-    void addDirectory(std::string newDirectoryName, const user& ownerUser); 
-    void addFile(std::string newFileName, const user& ownerUser);
+    void addDirectory(std::string newDirectoryName, const user& ownerUser, const group& ownerGroup); 
+    void addFile(std::string newFileName, const user& ownerUser, const group& ownerGroup);
 
-    void delDirectory(std::string directoryName);
-    void delFile(std::string fileName);
+    void delDirectory(std::string directoryName, const user& ownerUser, const group& ownerGroup);
+    void delFile(std::string fileName, const user& ownerUser, const group& ownerGroup);
 
-    void displayList() const;
+    void displayList(const user& ownerUser, const group& ownerGroup) const;
     void displayPath() const;
 
     //open a directory from the list
@@ -35,5 +35,5 @@ private:
     directory* getParent(); //returns pointer to parent directory
 
     void empty();   //called when a directory is deleted within another directory; empties the lists
-    void print();   //prints out selfs
+    void print();   //prints out self
 };
