@@ -1,6 +1,9 @@
+//Kayden McClung 04/23/2026
 #pragma once
 #include <string>
 #include <iostream>
+#include "user.hpp"
+#include "group.hpp"
 
 class item{
 
@@ -15,9 +18,12 @@ public:
 
     //set Functions
     void setName(std::string newName);
-    void setOwnerUser(std::string newOwnerName);
-    void setOwnerUser(int newOwnerUID);
+    void setOwnerUser(const user& newOwner);    //TODO:
+    void setOwnerGroup(const group& newGroup);  //TODO:
     void setPerm(int newPerm);
+    
+    //checks if permissions are elligble
+    bool permCheck(const user& currentUser, const group& currentGroup, std::string permType) const; //either r, w, or x
 
 private:
     //variables

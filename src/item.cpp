@@ -1,3 +1,4 @@
+//Kayden McClung 04/23/2026
 #pragma once
 #include "item.hpp"
 
@@ -34,7 +35,7 @@ void item::setName(std::string newName) {
 }
 
 void item::setPerm(int newPerm) {
-    //check to make sure passed int is valid
+    //checks to make sure passed int is valid
     if (checkOctal(newPerm) == false) {
         std::cout << "Error: invalid permission value" << std::endl;
     }else {
@@ -42,6 +43,49 @@ void item::setPerm(int newPerm) {
     }
     return;
 
+}
+
+
+// other public
+
+bool item::permCheck(const user& currentUser, const group& currentGroup, std::string permType) const{
+    bool r = false;
+    bool w = false;
+    bool x = false;
+    bool output = false;
+
+    int permValue = getPerm();
+    //TODO: only checks one group right now
+    //Needs user implementation
+    /*if (currentUser.getUID() == getOwnerUID()) {
+        permValue = permValue - (permValue % 10);
+        permValue /= 10;
+        permValue = permValue - (permValue % 10);
+        permValue /=10;
+    } else if (currentGroup.getGID() == getOwnerGID()){
+        permValue = permValue - (permValue % 10);
+        permValue /= 10;
+    }
+    */
+
+    //figures out what permissions it has
+    if ((permValue - 4) >= 0) {
+        permValue -= 4;
+        w = true;
+    }
+    if ((permValue - 2) >= 0) {
+        permValue -= 2;
+        r = true;
+    }
+    if ((permValue - 1) >= 0) {
+        permValue -= 1;
+        x = true;
+    }
+
+    if (permType == "r" & r == true) output = true;
+    else if (permType == "w" & w == true) output = true;
+    else if (permType == "x" & x == true) output = true;
+    return output;
 }
 
 
