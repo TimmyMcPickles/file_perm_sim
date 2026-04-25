@@ -1,4 +1,4 @@
-#pragma once
+// Ethan Prescott
 #include "user.hpp"
 #include <string>
 
@@ -19,6 +19,6 @@ void user::setUID(int id){
     uid = id;
 }
 
-void user::setUsername(std::string username){
-    username = username;
+void user::setUsername(std::string name){
+    username = name;
 }
