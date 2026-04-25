@@ -1,15 +1,19 @@
 #pragma once
 #include "user.hpp"
-#include <vector>
+#include <map>
 
 class userList{
     public:
     userList();
 
-    void add(user name);
-    void remove();
+    void add(user newUser);
+    void remove(std::string username);
     int size();
 
+    // Getter methods
+    user* getUser(std::string username);
+    bool userExists(std::string username);
+
     private:
-    std::vector<user> users;
+    std::map<std::string, user> users;
 };
