@@ -24,6 +24,7 @@ public:
     
     //checks if permissions are elligble
     bool permCheck(const user& currentUser, const group& currentGroup, std::string permType) const; //either r, w, or x
+    void print() const;
 
 private:
     //variables

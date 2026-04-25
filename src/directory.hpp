@@ -11,7 +11,7 @@
 class directory : public item{
 
 public:
-    directory(std::string newDirectoryName, const user& ownerUser, const directory* parentDirectory);
+    directory(std::string newDirectoryName, const user& ownerUser, const group& ownerGroup, directory* parentDirectory);
 
     void addDirectory(std::string newDirectoryName, const user& ownerUser, const group& ownerGroup); 
     void addFile(std::string newFileName, const user& ownerUser, const group& ownerGroup);
@@ -23,7 +23,7 @@ public:
     void displayPath() const;
 
     //open a directory from the list
-    void openDirectory(); // TODO
+    directory* getSubDirectory(std::string dirName, const user& ownerUser, const group& ownerGroup); // TODO
 
 private:
     std::list<directory*> subDirectoryList;
@@ -35,5 +35,4 @@ private:
     directory* getParent(); //returns pointer to parent directory
 
     void empty();   //called when a directory is deleted within another directory; empties the lists
-    void print();   //prints out self
 };

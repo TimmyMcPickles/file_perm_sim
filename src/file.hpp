@@ -8,11 +8,11 @@
 class file : public item{
 
 public:
-file(std::string newFileName, const user& ownerUser);
+file(std::string newFileName, const user& ownerUser, const group& ownerGroup);
 
-void read(const user& ownerUser, const group& ownerGroup); //could be changed to print to terminal
-void write(const user& ownerUser, const group& ownerGroup); // TODO:
-void execute(const user& ownerUser, const group& ownerGroup); // TODO:
+void read(const user& ownerUser, const group& ownerGroup); 
+void write(std::string newContent,const user& ownerUser, const group& ownerGroup); 
+void execute(const user& ownerUser, const group& ownerGroup); 
 
 private:
 std::string content = "Lorem Ipsum";
