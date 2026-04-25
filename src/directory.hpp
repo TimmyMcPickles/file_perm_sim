@@ -11,28 +11,38 @@
 class directory : public item{
 
 public:
-    directory(std::string newDirectoryName, const user& ownerUser, const group& ownerGroup, directory* parentDirectory);
+    //constructory
+    directory(std::string newDirectoryName,  user& ownerUser,  group& ownerGroup, directory* parentDirectory);
 
-    void addDirectory(std::string newDirectoryName, const user& ownerUser, const group& ownerGroup); 
-    void addFile(std::string newFileName, const user& ownerUser, const group& ownerGroup);
+    //creates a new directory and adds it to subDirectoryList
+    void addDirectory(std::string newDirectoryName,  user& ownerUser,  group& ownerGroup);
+    //creates a new file and adds it to fileList
+    void addFile(std::string newFileName,  user& ownerUser,  group& ownerGroup);
 
-    void delDirectory(std::string directoryName, const user& ownerUser, const group& ownerGroup);
-    void delFile(std::string fileName, const user& ownerUser, const group& ownerGroup);
+    //searches for directory in subDirectoryList and deletes it
+    void delDirectory(std::string directoryName,  user& ownerUser,  group& ownerGroup);
+    //searches for file in fileList and deletes it
+    void delFile(std::string fileName,  user& ownerUser,  group& ownerGroup);
 
-    void displayList(const user& ownerUser, const group& ownerGroup) const;
+    //prints a list of subDirectories, files, and permissions
+    void displayList( user& ownerUser,  group& ownerGroup) const;
+    //prints out file path
     void displayPath() const;
 
-    //open a directory from the list
-    directory* getSubDirectory(std::string dirName, const user& ownerUser, const group& ownerGroup); // TODO
+    //returns pointer to a subdeirectoy that matches the name; returns null pointer if its not found
+    directory* getSubDirectory(std::string dirName,  user& ownerUser,  group& ownerGroup); 
+
+    //removes hanging pointer and deletes all smaller lists
+    ~directory();
 
 private:
     std::list<directory*> subDirectoryList;
     std::list<file*> fileList;
-    directory *parent; //parent to parent directory
+    directory *parent; //pointer to parent directory
 
-    // TODO:
+    //pointer to parentDirectory
+    directory* getParent() const; //returns pointer to parent directory
 
-    directory* getParent(); //returns pointer to parent directory
-
+    //empties both subDirectoryList and fileList and deletes objects in them
     void empty();   //called when a directory is deleted within another directory; empties the lists
 };
