@@ -1,3 +1,4 @@
+// Ethan Prescott
 #include "groupList.hpp"
 
 groupList::groupList(){

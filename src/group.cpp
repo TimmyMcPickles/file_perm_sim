@@ -1,4 +1,4 @@
-#pragma once
+// Ethan Prescott
 #include "group.hpp"
 
 group::group(std::string name, int id){

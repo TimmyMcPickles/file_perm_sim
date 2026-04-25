@@ -1,3 +1,4 @@
+// Ethan Prescott
 #pragma once
 #include <string>
 
@@ -11,7 +12,7 @@ public:
 
     // Setters
     void setUID(int id);
-    void setUsername(std::string username);
+    void setUsername(std::string name);
 private:
     int uid;
     std::string username;

@@ -1,3 +1,4 @@
+// Ethan Prescott
 #include "userList.hpp"
 
 userList::userList(){
