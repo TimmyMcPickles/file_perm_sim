@@ -4,25 +4,32 @@
 
 //Get Functions
 
+//returns name
 std::string item::getName() const {
     return name;
 }
 
+//returns owner username
 std::string item::getOwnerName() const {
     return ownerUser;
 }
 
+//returns owner UID
 int item::getOwnerUID() const {
     return ownerUID;
 }
+
+//returns owner group name
 std::string item::getOwnerGroup() const {
     return ownerGroup;
 }
 
+//returns owner group GID
 int item::getOwnerGID() const {
     return ownerGID;
 }
 
+//returns permission value
 int item::getPerm() const {
     return perm;
 }
@@ -30,20 +37,27 @@ int item::getPerm() const {
 
 //Set Functions
 
+//sets name
 void item::setName(std::string newName) {
     name = newName;
+    return;
 }
 
-void item::setOwnerUser(const user& newOwner) {
-    //ownerUser = newOwner.getName(); TODO: uncomment and match function name
-    //ownerUID = newOwner.getUID(); TODO: uncomment
+//sets owner username and UID
+void item::setOwnerUser(user& newOwner) {
+    ownerUser = newOwner.getUsername();
+    ownerUID = newOwner.getUID(); 
+    return;
 }
 
-void item::setOwnerGroup(const group& newGroup) {
-    //ownerGroup = newGroup.getName(); TODO: uncomment and match function name
-    //ownerGID = newGroup.getGID(); TODO: uncomment
+//sets owner group name and GID
+void item::setOwnerGroup(group& newGroup) {
+    ownerGroup = newGroup.getGroupName();
+    ownerGID = newGroup.getGID();
+    return; 
 } 
 
+//sets Perm value if new value is valid
 void item::setPerm(int newPerm) {
     //checks to make sure passed int is valid
     if (checkOctal(newPerm) == false) {
@@ -58,14 +72,15 @@ void item::setPerm(int newPerm) {
 
 // other public
 
-bool item::permCheck(const user& currentUser, const group& currentGroup, std::string permType) const{
+//returns true if current user has valid permissions for specified permission type, else false
+bool item::permCheck(user& currentUser, group& currentGroup, std::string permType) const{
     bool r = false;
     bool w = false;
     bool x = false;
     bool output = false;
 
     int permValue = getPerm();
-    /*if (currentUser.getUID() == getOwnerUID()) {
+    if (currentUser.getUID() == getOwnerUID()) {
         permValue = permValue - (permValue % 10);
         permValue /= 10;
         permValue = permValue - (permValue % 10);
@@ -74,7 +89,7 @@ bool item::permCheck(const user& currentUser, const group& currentGroup, std::st
         permValue = permValue - (permValue % 10);
         permValue /= 10;
     }
-    */
+    
 
     //figures out what permissions it has
     if ((permValue - 4) >= 0) {
@@ -96,10 +111,8 @@ bool item::permCheck(const user& currentUser, const group& currentGroup, std::st
     return output;
 }
 
+//prints out name, ownership info, and permission settings
 void item::print() const{
-    bool r;
-    bool w;
-    bool x;
     std::string oPerm = "";
     std::string gPerm = "";
     std::string uPerm = "";
@@ -155,6 +168,7 @@ void item::print() const{
     } else uPerm.push_back('-');
 
     std::cout << uPerm << " " << gPerm << " " << oPerm << " " << ownerUser << " " << ownerGroup << " " << name << std::endl;
+    return;
 }
 
 

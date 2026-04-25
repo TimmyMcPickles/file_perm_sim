@@ -2,7 +2,7 @@
 #pragma once
 #include "directory.hpp"
 
-directory::directory(std::string newDirectoryName, const user& ownerUser, const group& ownerGroup, directory* parentDirectory) {
+directory::directory(std::string newDirectoryName,  user& ownerUser,  group& ownerGroup, directory* parentDirectory) {
     setName(newDirectoryName);
     setOwnerUser(ownerUser);
     setOwnerGroup(ownerGroup);
@@ -10,8 +10,8 @@ directory::directory(std::string newDirectoryName, const user& ownerUser, const 
     parent = parentDirectory;
 }
 
-//creates a new directory and pushes it to back of directories list
-void directory::addDirectory(std::string newDirectoryName, const user& ownerUser, const group& ownerGroup) {
+//creates a new directory and pushes it to back of directories list if permissions are valid
+void directory::addDirectory(std::string newDirectoryName,  user& ownerUser,  group& ownerGroup) {
     if (permCheck(ownerUser, ownerGroup, "w") == true){
 
         //searches list to make sure there isn't a duplicate in this loacation
@@ -29,7 +29,8 @@ void directory::addDirectory(std::string newDirectoryName, const user& ownerUser
     return;
 } 
 
-void directory::addFile(std::string newFileName, const user& ownerUser, const group& ownerGroup) {
+//creates file and adds it to list if permissions are valid
+void directory::addFile(std::string newFileName,  user& ownerUser,  group& ownerGroup) {
     if (permCheck(ownerUser, ownerGroup, "w") == true){
 
         //searches list to make sure there isn't a duplicate in this loacation
@@ -47,8 +48,8 @@ void directory::addFile(std::string newFileName, const user& ownerUser, const gr
     return;
 }
 
-//searches list for directory and deletes it if its there
-void directory::delDirectory(std::string directoryName, const user& ownerUser, const group& ownerGroup) {
+//searches list for directory and deletes it iif permissions are valid
+void directory::delDirectory(std::string directoryName,  user& ownerUser,  group& ownerGroup) {
     if (permCheck(ownerUser, ownerGroup, "w") == true){
 
         // searches list for a directory that that matches the name provided
@@ -57,8 +58,10 @@ void directory::delDirectory(std::string directoryName, const user& ownerUser, c
         });
 
         if (temp != subDirectoryList.end()) { //directory found
+            if ( (*temp)->subDirectoryList.empty() == false or (*temp)->fileList.empty() == false) (*temp)->empty();
             delete *temp;
-            subDirectoryList.erase(temp);
+            subDirectoryList.erase(temp);  
+
         } else {
             std::cout << "Error: no such directory found." << std::endl;
         }
@@ -68,7 +71,8 @@ void directory::delDirectory(std::string directoryName, const user& ownerUser, c
     return;
 }
 
-void directory::delFile(std::string fileName, const user& ownerUser, const group& ownerGroup) {
+//searches for specified file and deletes it from list if permissions are valid
+void directory::delFile(std::string fileName,  user& ownerUser,  group& ownerGroup) {
     if (permCheck(ownerUser, ownerGroup, "w") == true){
 
         // searches list for a directory that that matches the name provided
@@ -87,7 +91,8 @@ void directory::delFile(std::string fileName, const user& ownerUser, const group
     return;    
 }
 
-void directory::displayList( const user& ownerUser, const group& ownerGroup) const {
+//prints out list of objects in both lists and their permissions
+void directory::displayList(  user& ownerUser,  group& ownerGroup) const {
     if (permCheck(ownerUser, ownerGroup, "r") == true) {
         //print directories list
         std::cout << "Directories:" << std::endl;
@@ -103,12 +108,25 @@ void directory::displayList( const user& ownerUser, const group& ownerGroup) con
     return;
 }
 
-// TODO:
+//prints out directory path
 void directory::displayPath() const {
+    std::string output;
+    std::string slash = "\\";
+    std::string currentName = getName(); // \currentname
+    directory *current = getParent();
+    output = slash + currentName;
+    while (current != NULL) {
+        current->getParent();
+        output = currentName + output;
+        output = slash + output;
+    }
 
+    std::cout << output << std::endl;
+    return;
 }
 
-directory* directory::getSubDirectory(std::string dirName, const user& ownerUser, const group& ownerGroup) {
+//returns pointer to specified subDirectory
+directory* directory::getSubDirectory(std::string dirName,  user& ownerUser, group& ownerGroup) {
     auto temp = std::find_if(subDirectoryList.begin(), subDirectoryList.end(), [&dirName](const directory& current) {
         return current.getName() == dirName;
     });
@@ -117,12 +135,37 @@ directory* directory::getSubDirectory(std::string dirName, const user& ownerUser
     return *temp;
 }
 
+//ensures no hanging pointer, empties lists and deletes objects in them.
+directory::~directory() {
+    parent = NULL;
+    empty();
+}
 
-//private functions
+
+//private functions:
+
 
 //returns pointer to parent directory
-directory* directory::getParent() {
+directory* directory::getParent() const {
     return parent;
 } 
 
-void empty();
+//empties the lists directory
+void directory::empty() { 
+    //emptying subDirectoryLists
+    if (subDirectoryList.empty() == false) {
+        for (auto& dir : subDirectoryList) {
+            if (dir->subDirectoryList.empty() == false or dir->fileList.empty() == false) dir->empty();
+            delete dir;    
+        }
+        subDirectoryList.clear();
+    }
+    
+    //emptying fileList
+    if (fileList.empty() == false) {
+        for (auto& fil : fileList)  delete fil;
+        fileList.clear();
+    }
+
+    return;
+}
