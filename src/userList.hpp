@@ -6,10 +6,10 @@ class userList{
     public:
     userList();
 
-    void add();
+    void add(user name);
     void remove();
     int size();
 
     private:
-    std::vector<user> list;
+    std::vector<user> users;
 };
