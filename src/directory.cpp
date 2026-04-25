@@ -1,5 +1,4 @@
 //Kayden McClung 04/23/2026
-#pragma once
 #include "directory.hpp"
 
 directory::directory(std::string newDirectoryName,  user& ownerUser,  group& ownerGroup, directory* parentDirectory) {
@@ -27,7 +26,7 @@ void directory::addDirectory(std::string newDirectoryName,  user& ownerUser,  gr
     } else std::cout << "Error: do not have permissions for action" << std::endl;
 
     return;
-} 
+}
 
 //creates file and adds it to list if permissions are valid
 void directory::addFile(std::string newFileName,  user& ownerUser,  group& ownerGroup) {
@@ -60,14 +59,14 @@ void directory::delDirectory(std::string directoryName,  user& ownerUser,  group
         if (temp != subDirectoryList.end()) { //directory found
             if ( (*temp)->subDirectoryList.empty() == false or (*temp)->fileList.empty() == false) (*temp)->empty();
             delete *temp;
-            subDirectoryList.erase(temp);  
+            subDirectoryList.erase(temp);
 
         } else {
             std::cout << "Error: no such directory found." << std::endl;
         }
     } else std::cout << "Error: do not have permissions for action" << std::endl;
 
-    
+
     return;
 }
 
@@ -88,7 +87,7 @@ void directory::delFile(std::string fileName,  user& ownerUser,  group& ownerGro
         }
     } else std::cout << "Error: do not have permissions for action" << std::endl;
 
-    return;    
+    return;
 }
 
 //prints out list of objects in both lists and their permissions
@@ -148,19 +147,19 @@ directory::~directory() {
 //returns pointer to parent directory
 directory* directory::getParent() const {
     return parent;
-} 
+}
 
 //empties the lists directory
-void directory::empty() { 
+void directory::empty() {
     //emptying subDirectoryLists
     if (subDirectoryList.empty() == false) {
         for (auto& dir : subDirectoryList) {
             if (dir->subDirectoryList.empty() == false or dir->fileList.empty() == false) dir->empty();
-            delete dir;    
+            delete dir;
         }
         subDirectoryList.clear();
     }
-    
+
     //emptying fileList
     if (fileList.empty() == false) {
         for (auto& fil : fileList)  delete fil;

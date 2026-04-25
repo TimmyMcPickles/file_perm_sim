@@ -7,8 +7,8 @@ public:
 
     // Getters
     user(std::string username, int id);
-    const int getUID();
-    const std::string getUsername();
+    int getUID();
+    std::string getUsername();
 
     // Setters
     void setUID(int id);

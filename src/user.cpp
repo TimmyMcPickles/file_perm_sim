@@ -7,11 +7,11 @@ user::user(std::string username, int id){
     setUsername(username);
 }
 
-const std::string user::getUsername(){
+std::string user::getUsername(){
     return username;
 }
 
-const int user::getUID(){
+int user::getUID(){
     return uid;
 }
 

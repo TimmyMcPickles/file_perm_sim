@@ -13,6 +13,8 @@
 userList userDB;
 groupList groupDB;
 
+// Need root directory for file system simulation, but not implemented yet
+
 // Forward declarations
 void displayHelp(const std::vector<std::string>& args);
 void addUser(const std::vector<std::string>& args);
@@ -67,7 +69,7 @@ void processCommand(const std::string& input) {
     }
 }
 
-void displayHelp(const std::vector<std::string>& args) {
+void displayHelp() {
     std::cout << "\n=== Available Commands ===" << std::endl;
     std::cout << "adduser <username> <uid>     - Create a new user" << std::endl;
     std::cout << "addgroup <groupname> <gid>   - Create a new group" << std::endl;
@@ -142,7 +144,7 @@ void addGroup(const std::vector<std::string>& args) {
     std::cout << "Successfully created group '" << groupname << "' with GID " << gid << "." << std::endl;
 }
 
-void listUsers(const std::vector<std::string>& args) {
+void listUsers() {
     if (userDB.size() == 0) {
         std::cout << "No users in the system." << std::endl;
         return;
@@ -153,7 +155,7 @@ void listUsers(const std::vector<std::string>& args) {
     std::cout << "==============\n" << std::endl;
 }
 
-void listGroups(const std::vector<std::string>& args) {
+void listGroups() {
     if (groupDB.size() == 0) {
         std::cout << "No groups in the system." << std::endl;
         return;
@@ -198,7 +200,7 @@ void deleteGroup(const std::vector<std::string>& args) {
     std::cout << "Successfully deleted group '" << groupname << "'." << std::endl;
 }
 
-void exitProgram(const std::vector<std::string>& args) {
+void exitProgram() {
     std::cout << "Goodbye!" << std::endl;
     exit(0);
 }

@@ -1,5 +1,4 @@
 //Kayden McClung 04/23/2026
-#pragma once
 #include "item.hpp"
 
 //Get Functions
@@ -46,7 +45,7 @@ void item::setName(std::string newName) {
 //sets owner username and UID
 void item::setOwnerUser(user& newOwner) {
     ownerUser = newOwner.getUsername();
-    ownerUID = newOwner.getUID(); 
+    ownerUID = newOwner.getUID();
     return;
 }
 
@@ -54,8 +53,8 @@ void item::setOwnerUser(user& newOwner) {
 void item::setOwnerGroup(group& newGroup) {
     ownerGroup = newGroup.getGroupName();
     ownerGID = newGroup.getGID();
-    return; 
-} 
+    return;
+}
 
 //sets Perm value if new value is valid
 void item::setPerm(int newPerm) {
@@ -89,7 +88,7 @@ bool item::permCheck(user& currentUser, group& currentGroup, std::string permTyp
         permValue = permValue - (permValue % 10);
         permValue /= 10;
     }
-    
+
 
     //figures out what permissions it has
     if ((permValue - 4) >= 0) {
@@ -117,7 +116,7 @@ void item::print() const{
     std::string gPerm = "";
     std::string uPerm = "";
     int num = getPerm();
-    
+
     //permissions string for others
     int digit = num % 10;
     if ((digit - 4) >= 0) {
@@ -136,7 +135,7 @@ void item::print() const{
     num /= 10;
 
     //permissions string for group
-    int digit = num % 10;
+    digit = num % 10;
     if ((digit - 4) >= 0) {
         digit -= 4;
         gPerm.push_back('r');
@@ -153,7 +152,7 @@ void item::print() const{
     num /= 10;
 
     //permissions string for users
-    int digit = num % 10;
+    digit = num % 10;
     if ((digit - 4) >= 0) {
         digit -= 4;
         uPerm.push_back('r');

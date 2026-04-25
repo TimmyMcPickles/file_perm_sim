@@ -8,8 +8,8 @@ public:
     group(std::string name, int id);
 
     // Getters
-    const int getGID();
-    const std::string getGroupName();
+    int getGID();
+    std::string getGroupName();
 
     // Setters
     void setGID(int id);
