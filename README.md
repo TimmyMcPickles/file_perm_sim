@@ -156,8 +156,8 @@ file_perm_sim/
 
 ## Authors
 
-Kayden McClung
-Ethan Prescott
+- Kayden McClung
+- Ethan Prescott
 
 ## License
 
