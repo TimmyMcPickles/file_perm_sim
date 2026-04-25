@@ -2,11 +2,12 @@
 #pragma once
 #include "directory.hpp"
 
-directory::directory(std::string newDirectoryName, const user& ownerUser, const directory* parentDirectory) {
-    // TODO: implement getting user/group info; get permissions from umask too
-
-    setName(newDirectoryName); 
-
+directory::directory(std::string newDirectoryName, const user& ownerUser, const group& ownerGroup, directory* parentDirectory) {
+    setName(newDirectoryName);
+    setOwnerUser(ownerUser);
+    setOwnerGroup(ownerGroup);
+    setPerm(775);
+    parent = parentDirectory;
 }
 
 //creates a new directory and pushes it to back of directories list
@@ -19,7 +20,7 @@ void directory::addDirectory(std::string newDirectoryName, const user& ownerUser
         });
 
         if (temp == subDirectoryList.end()) {
-            subDirectoryList.push_back(new directory(newDirectoryName, ownerUser, this));
+            subDirectoryList.push_back(new directory(newDirectoryName, ownerUser, ownerGroup, this));
         } else {
             std::cout << "Error: already a directory under that name in this location" << std::endl;
         }
@@ -37,7 +38,7 @@ void directory::addFile(std::string newFileName, const user& ownerUser, const gr
         });
 
         if (temp == fileList.end()) {
-            fileList.push_back(new file(newFileName, ownerUser));
+            fileList.push_back(new file(newFileName, ownerUser, ownerGroup));
         } else {
             std::cout << "Error: already a file under that name in this location" << std::endl;
         }
@@ -88,7 +89,16 @@ void directory::delFile(std::string fileName, const user& ownerUser, const group
 
 void directory::displayList( const user& ownerUser, const group& ownerGroup) const {
     if (permCheck(ownerUser, ownerGroup, "r") == true) {
-        // TODO:
+        //print directories list
+        std::cout << "Directories:" << std::endl;
+        for (const auto& dir : subDirectoryList) {
+            dir->print();
+        }
+        //print file list
+        std::cout << "Files:" << std::endl;
+        for (const auto& fil : fileList) {
+            fil->print();
+        }
     } else std::cout << "Error: do not have permissions for action" << std::endl;
     return;
 }
@@ -98,3 +108,21 @@ void directory::displayPath() const {
 
 }
 
+directory* directory::getSubDirectory(std::string dirName, const user& ownerUser, const group& ownerGroup) {
+    auto temp = std::find_if(subDirectoryList.begin(), subDirectoryList.end(), [&dirName](const directory& current) {
+        return current.getName() == dirName;
+    });
+
+    if (temp == subDirectoryList.end()) *temp = NULL;
+    return *temp;
+}
+
+
+//private functions
+
+//returns pointer to parent directory
+directory* directory::getParent() {
+    return parent;
+} 
+
+void empty();

@@ -34,6 +34,16 @@ void item::setName(std::string newName) {
     name = newName;
 }
 
+void item::setOwnerUser(const user& newOwner) {
+    //ownerUser = newOwner.getName(); TODO: uncomment and match function name
+    //ownerUID = newOwner.getUID(); TODO: uncomment
+}
+
+void item::setOwnerGroup(const group& newGroup) {
+    //ownerGroup = newGroup.getName(); TODO: uncomment and match function name
+    //ownerGID = newGroup.getGID(); TODO: uncomment
+} 
+
 void item::setPerm(int newPerm) {
     //checks to make sure passed int is valid
     if (checkOctal(newPerm) == false) {
@@ -55,8 +65,6 @@ bool item::permCheck(const user& currentUser, const group& currentGroup, std::st
     bool output = false;
 
     int permValue = getPerm();
-    //TODO: only checks one group right now
-    //Needs user implementation
     /*if (currentUser.getUID() == getOwnerUID()) {
         permValue = permValue - (permValue % 10);
         permValue /= 10;
@@ -71,11 +79,11 @@ bool item::permCheck(const user& currentUser, const group& currentGroup, std::st
     //figures out what permissions it has
     if ((permValue - 4) >= 0) {
         permValue -= 4;
-        w = true;
+        r = true;
     }
     if ((permValue - 2) >= 0) {
         permValue -= 2;
-        r = true;
+        w = true;
     }
     if ((permValue - 1) >= 0) {
         permValue -= 1;
@@ -86,6 +94,67 @@ bool item::permCheck(const user& currentUser, const group& currentGroup, std::st
     else if (permType == "w" & w == true) output = true;
     else if (permType == "x" & x == true) output = true;
     return output;
+}
+
+void item::print() const{
+    bool r;
+    bool w;
+    bool x;
+    std::string oPerm = "";
+    std::string gPerm = "";
+    std::string uPerm = "";
+    int num = getPerm();
+    
+    //permissions string for others
+    int digit = num % 10;
+    if ((digit - 4) >= 0) {
+        digit -= 4;
+        oPerm.push_back('r');
+    } else oPerm.push_back('-');
+    if ((digit - 2) >= 0) {
+        digit -= 2;
+        oPerm.push_back('w');
+    } else oPerm.push_back('-');
+    if ((digit - 1) >= 0) {
+        digit -= 1;
+        oPerm.push_back('x');
+    } else oPerm.push_back('-');
+    num -= digit;
+    num /= 10;
+
+    //permissions string for group
+    int digit = num % 10;
+    if ((digit - 4) >= 0) {
+        digit -= 4;
+        gPerm.push_back('r');
+    } else gPerm.push_back('-');
+    if ((digit - 2) >= 0) {
+        digit -= 2;
+        gPerm.push_back('w');
+    } else gPerm.push_back('-');
+    if ((digit - 1) >= 0) {
+        digit -= 1;
+        gPerm.push_back('x');
+    } else gPerm.push_back('-');
+    num -= digit;
+    num /= 10;
+
+    //permissions string for users
+    int digit = num % 10;
+    if ((digit - 4) >= 0) {
+        digit -= 4;
+        uPerm.push_back('r');
+    } else uPerm.push_back('-');
+    if ((digit - 2) >= 0) {
+        digit -= 2;
+        uPerm.push_back('w');
+    } else uPerm.push_back('-');
+    if ((digit - 1) >= 0) {
+        digit -= 1;
+        uPerm.push_back('x');
+    } else uPerm.push_back('-');
+
+    std::cout << uPerm << " " << gPerm << " " << oPerm << " " << ownerUser << " " << ownerGroup << " " << name << std::endl;
 }
 
 
