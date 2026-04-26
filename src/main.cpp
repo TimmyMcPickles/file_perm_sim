@@ -14,7 +14,7 @@ userList userDB;
 groupList groupDB;
 user *currentUser;
 group *currentGroup; //if we have time, user should have a list of groups that they are in
-directory *root;
+directory *currentDir;
 
 // Need root directory for file system simulation, but not implemented yet
 
@@ -31,14 +31,16 @@ void exitProgram(const std::vector<std::string>& args);
 void login(const std::vector<std::string>& args);
 void setgroup(const std::vector<std::string>& args);
 
-void makeDir(const std::vector<std::string>& args);
+/*void makeDir(const std::vector<std::string>& args);
+void pwd(const std::vector<std::string>& args);
+void back(const std::vector<std::string>& args);
 void removeDir(const std::vector<std::string>& args);
 void makeFil(const std::vector<std::string>& args);
 void removeFil(const std::vector<std::string>& args);
 void openDir(const std::vector<std::string>& args);
 void changePerm(const std::vector<std::string>& args);
 void changeOwn(const std::vector<std::string>& args);
-void changeGrp(const std::vector<std::string>& args);
+void changeGrp(const std::vector<std::string>& args);*/
 
 // Command map type
 using CommandHandler = std::function<void(const std::vector<std::string>&)>;
@@ -57,16 +59,18 @@ void initializeCommands() {
 
     commands["login"] = login;
     commands["setgroup"] = setgroup;
-    commands["whoami"] = whoami;
+    //commands["whoami"] = whoami; TODO
 
-    commands["mkdir"] = makeDir;
+    /*commands["mkdir"] = makeDir;
+    commands["pwd"] = pwd;
+    commands["back"] = back;
     commands["rmdir"] = removeDir;
     commands["mkfil"] = makeFil;
     commands["rmfil"] = removeFil;
     commands["cd"] = openDir;
     commands["chmod"] = changePerm;
     commands["chown"] = changeOwn;
-    commands["chgrp"] = changeGrp; 
+    commands["chgrp"] = changeGrp; */
 }
 
 std::vector<std::string> parseCommand(const std::string& input) {
@@ -270,7 +274,7 @@ void setgroup(const std::vector<std::string>& args) {
     }
 
     currentUser = userDB.getUser(groupname);
-    std::cout << "Successfully logged in as " << groupname << std::endl;
+    std::cout << "Successfully set group to " << groupname << std::endl;
 }
 
 
@@ -284,7 +288,15 @@ void makeDir(const std::vector<std::string>& args) {
     std::string dirname = args[1];
 }
 
-void makeDir(const std::vector<std::string>& args) {
+/*void makeDir(const std::vector<std::string>& args) {
+
+}
+
+void pwd(const std::vector<std::string>& args) {
+
+}
+
+void back(const std::vector<std::string>& args) {
 
 }
 
@@ -314,7 +326,7 @@ void changeOwn(const std::vector<std::string>& args) {
 
 void changeGrp(const std::vector<std::string>& args) {
 
-}
+} */
 
 void initialLogin(const std::vector<std::string>& args) {
     if (args.size() != 2) {
@@ -332,12 +344,24 @@ void initialLogin(const std::vector<std::string>& args) {
         return;
     }
 
+    if (uid < 0) {
+        std::cout << "Error: UID must be a non-negative integer." << std::endl;
+        return;
+    }
+
     user newUser(username, uid);
     userDB.add(newUser);
-    std::cout << "Successfully created user '" << username << "' with UID " << uid << "." << std::endl;
+    std::cout << "Successfully created user '" << username << " with UID " << uid << "." << std::endl;
 
     currentUser = userDB.getUser(username);
     std::cout << "Successfully logged in as " << username << std::endl;
+
+    group newGroup(username, uid);
+    groupDB.add(newGroup);
+    std::cout << "Default group created as " << username << " with GID set to " << uid << std::endl;
+
+    currentGroup = groupDB.getGroup(username);
+    std::cout << "Successfully set group to " << username << std::endl;
 }
 
 int main() {
@@ -345,8 +369,6 @@ int main() {
 
     std::string input;
     std::cout << "Welcome to the Unix-like File Permission Simulator!" << std::endl;
-    std::cout << "Type 'help' to see available commands." << std::endl;
-    std::cout << std::endl;
 
     while (userDB.size() == 0) {
         std::cout << "Please enter a username and user id: <username> <UID>" << std::endl;
@@ -354,9 +376,17 @@ int main() {
         std::getline(std::cin, input);
 
         if (!input.empty()) {
-            processCommand(input);
+            std::vector<std::string> tokens = parseCommand(input);
+            initialLogin(tokens);
         }
     }
+    std::string rootname = "root";
+    directory root(rootname, *currentUser, *currentGroup, NULL);
+    //*currentDir = root;
+
+
+    std::cout << "Type 'help' to see available commands." << std::endl;
+    std::cout << std::endl;
 
     while (true) {
         std::cout << "> ";
