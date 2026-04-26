@@ -22,46 +22,97 @@ This project simulates core Unix file permission concepts including:
 - Standard build tools
 
 ### Windows
-- Visual Studio 2015 or later with C++ support, OR
-- MinGW with CMake
+**Option 1: Visual Studio (Recommended)**
+- Visual Studio 2015 or later with C++ support
+
+**Option 2: MinGW (Command Line)**
+- MinGW with GCC compiler
+- CMake
 
 ## Installation & Build
 
-### Step 1: Clone or Download the Project
+### Linux/macOS
 
+1. Navigate to the project directory:
 ```bash
 cd file_perm_sim
 ```
 
-### Step 2: Create a Build Directory
-
+2. Create a build directory:
 ```bash
 mkdir build
 cd build
 ```
 
-### Step 3: Generate Build Files
-
+3. Generate build files:
 ```bash
 cmake ..
 ```
 
-### Step 4: Build the Project
-
+4. Build the project:
 ```bash
 cmake --build .
 ```
 
-## Running the Program
-
-After building, run the executable from the build directory:
-
-### Linux/macOS
+5. Run the program:
 ```bash
 ./file_perm_sim
 ```
 
-### Windows
+### Windows with Visual Studio
+
+1. Navigate to the project directory:
+```bash
+cd file_perm_sim
+```
+
+2. Create a build directory:
+```bash
+mkdir build
+cd build
+```
+
+3. Generate build files (CMake will auto-detect Visual Studio):
+```bash
+cmake ..
+```
+
+4. Build the project:
+```bash
+cmake --build .
+```
+
+5. Run the program:
+```bash
+./file_perm_sim.exe
+```
+
+### Windows with MinGW (Command Line)
+
+**Important:** You MUST specify the MinGW generator when using CMake with MinGW.
+
+1. Navigate to the project directory:
+```bash
+cd file_perm_sim
+```
+
+2. Create a build directory:
+```bash
+mkdir build
+cd build
+```
+
+3. Generate build files with MinGW generator:
+```bash
+cmake -G "MinGW Makefiles" ..
+```
+
+4. Build the project:
+```bash
+cmake --build .
+```
+
+5. Run the program:
 ```bash
 ./file_perm_sim.exe
 ```
@@ -84,7 +135,7 @@ After building, run the executable from the build directory:
 
 ## Example Usage
 
-```bash
+```
 > adduser alice 1001
 Successfully created user 'alice' with UID 1001.
 
@@ -146,13 +197,37 @@ file_perm_sim/
 - **macOS**: `brew install cmake`
 - **Windows**: Download from https://cmake.org/download/
 
-### Compiler errors
+### Windows: "nmake not found" or compiler errors
+This happens when CMake tries to use Visual Studio but it's not installed. Use the MinGW generator instead:
+```bash
+cmake -G "MinGW Makefiles" ..
+```
+
+### Windows MinGW: CMake still fails after using -G "MinGW Makefiles"
+MinGW might not be in your system PATH. Try one of these solutions:
+
+**Solution 1: Add MinGW to PATH**
+- Find your MinGW installation (usually `C:\MinGW` or `C:\Program Files\MinGW`)
+- Add `<MinGW-path>\bin` to your system PATH environment variable
+- Restart your terminal and try again
+
+**Solution 2: Specify compiler explicitly**
+```bash
+cmake -G "MinGW Makefiles" -DCMAKE_CXX_COMPILER=C:\MinGW\bin\g++.exe ..
+```
+
+**Solution 3: Use full path to CMake**
+```bash
+"C:\Program Files\CMake\bin\cmake.exe" -G "MinGW Makefiles" ..
+```
+
+### Compiler errors (all platforms)
 - Ensure you have C++17 or later support
 - On older systems, you may need to install a newer compiler version
 
-### Build fails on Windows
-- Try using Visual Studio 2019 or later
-- Alternatively, install MinGW and ensure it's in your PATH
+### Build succeeds but executable won't run
+- Ensure all dependencies are in your PATH
+- Try running from the build directory where the executable was created
 
 ## Authors
 
