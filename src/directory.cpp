@@ -21,6 +21,7 @@ void directory::addDirectory(std::string newDirectoryName,  user& ownerUser,  gr
 
         if (temp == subDirectoryList.end()) {
             subDirectoryList.push_back(new directory(newDirectoryName, ownerUser, ownerGroup, this));
+            std::cout << newDirectoryName << " has been successfully created" << std::endl;
         } else {
             std::cout << "Error: already a directory under that name in this location" << std::endl;
         }
@@ -40,6 +41,7 @@ void directory::addFile(std::string newFileName,  user& ownerUser,  group& owner
 
         if (temp == fileList.end()) {
             fileList.push_back(new file(newFileName, ownerUser, ownerGroup));
+            std::cout << newFileName << " has been successfully created" << std::endl;
         } else {
             std::cout << "Error: already a file under that name in this location" << std::endl;
         }
@@ -61,6 +63,7 @@ void directory::delDirectory(std::string directoryName,  user& ownerUser,  group
             if ( (*temp)->subDirectoryList.empty() == false or (*temp)->fileList.empty() == false) (*temp)->empty();
             delete *temp;
             subDirectoryList.erase(temp);
+            std::cout << directoryName << " has been successfully deleted." << std::endl;
 
         } else {
             std::cout << "Error: no such directory found." << std::endl;
@@ -83,6 +86,7 @@ void directory::delFile(std::string fileName,  user& ownerUser,  group& ownerGro
         if (temp != fileList.end()) { //directory found
             delete *temp;
             fileList.erase(temp);
+            std::cout << fileName << " has been successfully deleted." << std::endl;
         } else {
             std::cout << "Error: no such file found." << std::endl;
         }
