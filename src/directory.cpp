@@ -14,8 +14,8 @@ void directory::addDirectory(std::string newDirectoryName,  user& ownerUser,  gr
     if (permCheck(ownerUser, ownerGroup, "w") == true){
 
         //searches list to make sure there isn't a duplicate in this loacation
-        auto temp = std::find_if(subDirectoryList.begin(), subDirectoryList.end(), [&newDirectoryName](const directory& current) {
-            return current.getName() == newDirectoryName;
+        auto temp = std::find_if(subDirectoryList.begin(), subDirectoryList.end(), [&newDirectoryName](const directory* current) {
+            return current->getName() == newDirectoryName;
         });
 
         if (temp == subDirectoryList.end()) {
@@ -33,8 +33,8 @@ void directory::addFile(std::string newFileName,  user& ownerUser,  group& owner
     if (permCheck(ownerUser, ownerGroup, "w") == true){
 
         //searches list to make sure there isn't a duplicate in this loacation
-        auto temp = std::find_if(fileList.begin(), fileList.end(), [&newFileName](const directory& current) {
-            return current.getName() == newFileName;
+        auto temp = std::find_if(fileList.begin(), fileList.end(), [&newFileName](const file* current) {
+            return current->getName() == newFileName;
         });
 
         if (temp == fileList.end()) {
@@ -52,8 +52,8 @@ void directory::delDirectory(std::string directoryName,  user& ownerUser,  group
     if (permCheck(ownerUser, ownerGroup, "w") == true){
 
         // searches list for a directory that that matches the name provided
-        auto temp = std::find_if(subDirectoryList.begin(), subDirectoryList.end(), [&directoryName](const directory& current) {
-            return current.getName() == directoryName;
+        auto temp = std::find_if(subDirectoryList.begin(), subDirectoryList.end(), [&directoryName](const directory* current) {
+            return current->getName() == directoryName;
         });
 
         if (temp != subDirectoryList.end()) { //directory found
@@ -75,8 +75,8 @@ void directory::delFile(std::string fileName,  user& ownerUser,  group& ownerGro
     if (permCheck(ownerUser, ownerGroup, "w") == true){
 
         // searches list for a directory that that matches the name provided
-        auto temp = std::find_if(fileList.begin(), fileList.end(), [&fileName](const file& current) {
-            return current.getName() == fileName;
+        auto temp = std::find_if(fileList.begin(), fileList.end(), [&fileName](const file* current) {
+            return current->getName() == fileName;
         });
 
         if (temp != fileList.end()) { //directory found
@@ -125,9 +125,9 @@ void directory::displayPath() const {
 }
 
 //returns pointer to specified subDirectory
-directory* directory::getSubDirectory(std::string dirName,  user& ownerUser, group& ownerGroup) {
-    auto temp = std::find_if(subDirectoryList.begin(), subDirectoryList.end(), [&dirName](const directory& current) {
-        return current.getName() == dirName;
+directory* directory::getSubDirectory(std::string dirName) {
+    auto temp = std::find_if(subDirectoryList.begin(), subDirectoryList.end(), [&dirName](const directory* current) {
+        return current->getName() == dirName;
     });
 
     if (temp == subDirectoryList.end()) *temp = NULL;
