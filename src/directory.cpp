@@ -2,18 +2,12 @@
 #include "directory.hpp"
 
 directory::directory(std::string newDirectoryName,  user& ownerUser,  group& ownerGroup, directory* parentDirectory) {
-    std::cout << "test1" << std::endl;
     setName(newDirectoryName);
-    std::cout << "test2" << std::endl;
     setOwnerUser(ownerUser);
-    std::cout << "test3" << std::endl;
     setOwnerGroup(ownerGroup);
-    std::cout << "test4" << std::endl;
     parent = parentDirectory;
-    std::cout << "test5" << std::endl;
     if (parent == NULL) setPerm(777);
     else setPerm(775);
-    std::cout << "test done" << std::endl;
 }
 
 //creates a new directory and pushes it to back of directories list if permissions are valid
