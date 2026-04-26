@@ -32,6 +32,9 @@ public:
     //returns pointer to a subdeirectoy that matches the name; returns null pointer if its not found
     directory* getSubDirectory(std::string dirName); 
 
+    //pointer to parentDirectory
+    directory* getParent() const; //returns pointer to parent directory
+
     //removes hanging pointer and deletes all smaller lists
     ~directory();
 
@@ -39,9 +42,6 @@ private:
     std::list<directory*> subDirectoryList;
     std::list<file*> fileList;
     directory *parent; //pointer to parent directory
-
-    //pointer to parentDirectory
-    directory* getParent() const; //returns pointer to parent directory
 
     //empties both subDirectoryList and fileList and deletes objects in them
     void empty();   //called when a directory is deleted within another directory; empties the lists

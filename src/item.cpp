@@ -186,7 +186,7 @@ bool item::checkOctal(int num) {
     else {
         while (num > 0 and output == true) {
             int digit = num % 10;
-            if (digit < 8) output = false;
+            if (digit > 8) output = false;
             num -= digit;
             num /= 10;
         }
