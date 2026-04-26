@@ -2,12 +2,15 @@
 #include "user.hpp"
 #include <string>
 
+user::user(){
+    uid = 0;
+    username = "";
+}
+
 user::user(std::string username, int id){
     setUID(id);
     setUsername(username);
 }
-
-user::user(){};
 
 std::string user::getUsername(){
     return username;
