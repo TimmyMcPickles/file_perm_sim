@@ -6,6 +6,7 @@ class user{
 public:
 
     // Getters
+    user();
     user(std::string username, int id);
     int getUID();
     std::string getUsername();

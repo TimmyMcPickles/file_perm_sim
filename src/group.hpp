@@ -5,7 +5,8 @@
 class group{
 
 public:
-    group(std::string name, int id);
+group();
+group(std::string name, int id);
 
     // Getters
     int getGID();
