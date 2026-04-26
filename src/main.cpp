@@ -57,6 +57,7 @@ void initializeCommands() {
 
     commands["login"] = login;
     commands["setgroup"] = setgroup;
+    commands["whoami"] = whoami;
 
     commands["mkdir"] = makeDir;
     commands["rmdir"] = removeDir;
@@ -275,7 +276,12 @@ void setgroup(const std::vector<std::string>& args) {
 
 
 void makeDir(const std::vector<std::string>& args) {
+    if (args.size() != 2) {
+        std::cout << "Error: Invalid syntax. Usage: mkdir <directoryname>" << std::endl;
+        return;
+    }
 
+    std::string dirname = args[1];
 }
 
 void makeDir(const std::vector<std::string>& args) {
@@ -310,6 +316,30 @@ void changeGrp(const std::vector<std::string>& args) {
 
 }
 
+void initialLogin(const std::vector<std::string>& args) {
+    if (args.size() != 2) {
+        std::cout << "Error: Invalid syntax. Please enter a username and UID: <username> <UID>" << std::endl;
+        return;
+    }
+
+    std::string username = args[0];
+    int uid;
+
+    try {
+        uid = std::stoi(args[1]);
+    } catch (...) {
+        std::cout << "Error: UID must be a valid integer." << std::endl;
+        return;
+    }
+
+    user newUser(username, uid);
+    userDB.add(newUser);
+    std::cout << "Successfully created user '" << username << "' with UID " << uid << "." << std::endl;
+
+    currentUser = userDB.getUser(username);
+    std::cout << "Successfully logged in as " << username << std::endl;
+}
+
 int main() {
     initializeCommands();
 
@@ -317,6 +347,16 @@ int main() {
     std::cout << "Welcome to the Unix-like File Permission Simulator!" << std::endl;
     std::cout << "Type 'help' to see available commands." << std::endl;
     std::cout << std::endl;
+
+    while (userDB.size() == 0) {
+        std::cout << "Please enter a username and user id: <username> <UID>" << std::endl;
+        std::cout << "> ";
+        std::getline(std::cin, input);
+
+        if (!input.empty()) {
+            processCommand(input);
+        }
+    }
 
     while (true) {
         std::cout << "> ";
