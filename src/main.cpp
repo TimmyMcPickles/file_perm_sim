@@ -12,6 +12,8 @@
 // Global database for users and groups
 userList userDB;
 groupList groupDB;
+user *currentUser;
+group *currentGroup; //if we have time, user should have a list of groups that they are in
 directory *root;
 
 // Need root directory for file system simulation, but not implemented yet
@@ -25,6 +27,9 @@ void listGroups(const std::vector<std::string>& args);
 void deleteUser(const std::vector<std::string>& args);
 void deleteGroup(const std::vector<std::string>& args);
 void exitProgram(const std::vector<std::string>& args);
+
+void login(const std::vector<std::string>& args);
+void setgroup(const std::vector<std::string>& args);
 
 void makeDir(const std::vector<std::string>& args);
 void removeDir(const std::vector<std::string>& args);
@@ -49,6 +54,9 @@ void initializeCommands() {
     commands["help"] = displayHelp;
     commands["exit"] = exitProgram;
     commands["quit"] = exitProgram;
+
+    commands["login"] = login;
+    commands["setgroup"] = setgroup;
 
     commands["mkdir"] = makeDir;
     commands["rmdir"] = removeDir;
@@ -228,7 +236,77 @@ void exitProgram(const std::vector<std::string>& args) {
     exit(0);
 }
 
+
+
+void login(const std::vector<std::string>& args) {
+    if (args.size() != 2) {
+        std::cout << "Error: Invalid syntax. Usage: login <username>" << std::endl;
+        return;
+    }
+
+    std::string username = args[1];
+
+    if (!userDB.userExists(username)) {
+        std::cout << "Error: User '" << username << "' does not exist." << std::endl;
+        return;
+    }
+
+    currentUser = userDB.getUser(username);
+    std::cout << "Successfully logged in as " << username << std::endl;
+}
+
+void setgroup(const std::vector<std::string>& args) {
+    if (args.size() != 2) {
+        std::cout << "Error: Invalid syntax. Usage: setgroup <groupname>" << std::endl;
+        return;
+    }
+
+    std::string groupname = args[1];
+
+    if (!userDB.userExists(groupname)) {
+        std::cout << "Error: Group '" << groupname << "' does not exist." << std::endl;
+        return;
+    }
+
+    currentUser = userDB.getUser(groupname);
+    std::cout << "Successfully logged in as " << groupname << std::endl;
+}
+
+
+
 void makeDir(const std::vector<std::string>& args) {
+
+}
+
+void makeDir(const std::vector<std::string>& args) {
+
+}
+
+void removeDir(const std::vector<std::string>& args) {
+
+}
+
+void makeFil(const std::vector<std::string>& args) {
+
+}
+
+void removeFil(const std::vector<std::string>& args) {
+
+}
+
+void openDir(const std::vector<std::string>& args) {
+
+}
+
+void changePerm(const std::vector<std::string>& args) {
+
+}
+
+void changeOwn(const std::vector<std::string>& args) {
+
+}
+
+void changeGrp(const std::vector<std::string>& args) {
 
 }
 
