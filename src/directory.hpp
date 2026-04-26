@@ -30,7 +30,7 @@ public:
     void displayPath() const;
 
     //returns pointer to a subdeirectoy that matches the name; returns null pointer if its not found
-    directory* getSubDirectory(std::string dirName,  user& ownerUser,  group& ownerGroup); 
+    directory* getSubDirectory(std::string dirName); 
 
     //removes hanging pointer and deletes all smaller lists
     ~directory();

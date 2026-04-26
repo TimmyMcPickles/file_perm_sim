@@ -104,9 +104,9 @@ bool item::permCheck(user& currentUser, group& currentGroup, std::string permTyp
         x = true;
     }
 
-    if (permType == "r" & r == true) output = true;
-    else if (permType == "w" & w == true) output = true;
-    else if (permType == "x" & x == true) output = true;
+    if ((permType == "r") & (r == true)) output = true;
+    else if ((permType == "w") & (w == true)) output = true;
+    else if ((permType == "x" & x == true)) output = true;
     return output;
 }
 
