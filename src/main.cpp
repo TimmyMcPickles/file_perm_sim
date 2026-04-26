@@ -12,6 +12,7 @@
 // Global database for users and groups
 userList userDB;
 groupList groupDB;
+directory *root;
 
 // Need root directory for file system simulation, but not implemented yet
 
@@ -39,6 +40,15 @@ void initializeCommands() {
     commands["help"] = displayHelp;
     commands["exit"] = exitProgram;
     commands["quit"] = exitProgram;
+
+    /*commands["mkdir"] = makeDir;
+    commands["rmdir"] = removeDir;
+    commands["mkfil"] = makeFil;
+    commands["rmfil"] = removeFil;
+    commands["cd"] = openDir;
+    commands["chmod"] = changePerm;
+    commands["chown"] = changeOwn;
+    commands["chgrp"] = changeGrp; */
 }
 
 std::vector<std::string> parseCommand(const std::string& input) {
@@ -69,7 +79,7 @@ void processCommand(const std::string& input) {
     }
 }
 
-void displayHelp() {
+void displayHelp(const std::vector<std::string>& args) {
     std::cout << "\n=== Available Commands ===" << std::endl;
     std::cout << "adduser <username> <uid>     - Create a new user" << std::endl;
     std::cout << "addgroup <groupname> <gid>   - Create a new group" << std::endl;
@@ -80,6 +90,7 @@ void displayHelp() {
     std::cout << "help                         - Display this help menu" << std::endl;
     std::cout << "exit, quit                   - Exit the program" << std::endl;
     std::cout << "========================\n" << std::endl;
+    (void)args;
 }
 
 void addUser(const std::vector<std::string>& args) {
@@ -144,9 +155,10 @@ void addGroup(const std::vector<std::string>& args) {
     std::cout << "Successfully created group '" << groupname << "' with GID " << gid << "." << std::endl;
 }
 
-void listUsers() {
+void listUsers(const std::vector<std::string>& args) {
     if (userDB.size() == 0) {
         std::cout << "No users in the system." << std::endl;
+        (void)args;
         return;
     }
 
@@ -155,9 +167,10 @@ void listUsers() {
     std::cout << "==============\n" << std::endl;
 }
 
-void listGroups() {
+void listGroups(const std::vector<std::string>& args) {
     if (groupDB.size() == 0) {
         std::cout << "No groups in the system." << std::endl;
+        (void)args;
         return;
     }
 
@@ -200,8 +213,9 @@ void deleteGroup(const std::vector<std::string>& args) {
     std::cout << "Successfully deleted group '" << groupname << "'." << std::endl;
 }
 
-void exitProgram() {
+void exitProgram(const std::vector<std::string>& args) {
     std::cout << "Goodbye!" << std::endl;
+    (void)args;
     exit(0);
 }
 
