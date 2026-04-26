@@ -26,6 +26,15 @@ void deleteUser(const std::vector<std::string>& args);
 void deleteGroup(const std::vector<std::string>& args);
 void exitProgram(const std::vector<std::string>& args);
 
+void makeDir(const std::vector<std::string>& args);
+void removeDir(const std::vector<std::string>& args);
+void makeFil(const std::vector<std::string>& args);
+void removeFil(const std::vector<std::string>& args);
+void openDir(const std::vector<std::string>& args);
+void changePerm(const std::vector<std::string>& args);
+void changeOwn(const std::vector<std::string>& args);
+void changeGrp(const std::vector<std::string>& args);
+
 // Command map type
 using CommandHandler = std::function<void(const std::vector<std::string>&)>;
 std::map<std::string, CommandHandler> commands;
@@ -41,14 +50,14 @@ void initializeCommands() {
     commands["exit"] = exitProgram;
     commands["quit"] = exitProgram;
 
-    /*commands["mkdir"] = makeDir;
+    commands["mkdir"] = makeDir;
     commands["rmdir"] = removeDir;
     commands["mkfil"] = makeFil;
     commands["rmfil"] = removeFil;
     commands["cd"] = openDir;
     commands["chmod"] = changePerm;
     commands["chown"] = changeOwn;
-    commands["chgrp"] = changeGrp; */
+    commands["chgrp"] = changeGrp; 
 }
 
 std::vector<std::string> parseCommand(const std::string& input) {
@@ -217,6 +226,10 @@ void exitProgram(const std::vector<std::string>& args) {
     std::cout << "Goodbye!" << std::endl;
     (void)args;
     exit(0);
+}
+
+void makeDir(const std::vector<std::string>& args) {
+
 }
 
 int main() {
