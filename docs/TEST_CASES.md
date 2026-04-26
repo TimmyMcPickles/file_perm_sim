@@ -1,49 +1,61 @@
 # Test Cases
 
-These are simple test cases we can use to check the simulator as it develops.
+These test cases are meant to help the group check the simulator as features are added. They are split into current tests and future permission tests.
 
-## Current command tests
+## Current user command tests
 
-| Command | Expected Result |
-|---|---|
-| `help` | command menu is displayed |
-| `adduser alice 1001` | user is created |
-| `adduser alice 1001` twice | second command gives duplicate user error |
-| `adduser bob abc` | error because UID is not an integer |
-| `adduser bob -1` | error because UID is negative |
-| `listusers` | user information/count is displayed |
-| `deluser alice` | user is deleted |
-| `deluser missinguser` | error because user does not exist |
-| `addgroup students 100` | group is created |
-| `addgroup students 100` twice | second command gives duplicate group error |
-| `addgroup staff abc` | error because GID is not an integer |
-| `addgroup staff -1` | error because GID is negative |
-| `listgroups` | group information/count is displayed |
-| `delgroup students` | group is deleted |
-| `delgroup missinggroup` | error because group does not exist |
-| `exit` | program exits |
+| Test | Command | Expected Result |
+|---|---|---|
+| Add valid user | `adduser alice 1001` | User is created |
+| Duplicate user | `adduser alice 1001` twice | Second command gives an error |
+| Invalid UID | `adduser bob abc` | Error because UID is not an integer |
+| Negative UID | `adduser bob -1` | Error because UID is negative |
+| List users | `listusers` | User information/count is displayed |
+| Delete existing user | `deluser alice` | User is deleted |
+| Delete missing user | `deluser missinguser` | Error because user does not exist |
 
-## Planned permission tests
+## Current group command tests
 
-These can be used once file and directory commands are fully connected.
+| Test | Command | Expected Result |
+|---|---|---|
+| Add valid group | `addgroup students 100` | Group is created |
+| Duplicate group | `addgroup students 100` twice | Second command gives an error |
+| Invalid GID | `addgroup staff abc` | Error because GID is not an integer |
+| Negative GID | `addgroup staff -1` | Error because GID is negative |
+| List groups | `listgroups` | Group information/count is displayed |
+| Delete existing group | `delgroup students` | Group is deleted |
+| Delete missing group | `delgroup missinggroup` | Error because group does not exist |
+
+## Utility command tests
+
+| Test | Command | Expected Result |
+|---|---|---|
+| Help menu | `help` | Available commands are displayed |
+| Unknown command | `badcommand` | Unknown command error is shown |
+| Exit program | `exit` | Program closes |
+| Quit program | `quit` | Program closes |
+
+## Planned permission behavior tests
+
+These tests can be used once file and directory actions are connected to the command-line interface.
 
 | Permission | User Type | Action | Expected Result |
 |---:|---|---|---|
-| `600` | owner | read | allowed |
-| `600` | owner | write | allowed |
-| `600` | other | read | denied |
-| `644` | other | read | allowed |
-| `644` | other | write | denied |
-| `755` | other | execute | allowed |
-| `640` | group member | read | allowed |
-| `640` | group member | write | denied |
+| `600` | Owner | Read file | Allowed |
+| `600` | Owner | Write file | Allowed |
+| `600` | Other user | Read file | Denied |
+| `644` | Other user | Read file | Allowed |
+| `644` | Other user | Write file | Denied |
+| `755` | Other user | Execute file | Allowed |
+| `640` | Group member | Read file | Allowed |
+| `640` | Group member | Write file | Denied |
 
-## Planned directory tests
+## Planned directory behavior tests
 
 | Permission | Action | Expected Result |
 |---:|---|---|
-| `700` | create file as owner | allowed |
-| `755` | create file as other | denied |
-| `777` | create file as other | allowed |
-| `555` | list directory | allowed |
-| `333` | list directory | denied |
+| `700` | Owner creates file/directory | Allowed |
+| `755` | Other user creates file/directory | Denied |
+| `777` | Other user creates file/directory | Allowed |
+| `555` | User lists directory | Allowed |
+| `333` | User lists directory | Denied |

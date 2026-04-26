@@ -1,117 +1,37 @@
-# Command Reference
+# Command Reference Notes
 
-These are the commands currently shown in the simulator or planned for later file permission features.
+This file is meant to support testing and the final report. The main README already explains how to build and run the program, so this document focuses only on the simulator commands and how they relate to the project goal.
 
-## Current commands
+## Current working commands
 
-These commands are currently part of the command-line interface.
+The current command-line interface supports basic user and group management.
 
-### `help`
+| Command | Purpose | Example |
+|---|---|---|
+| `help` | Shows the command menu | `help` |
+| `adduser <username> <uid>` | Creates a user | `adduser alice 1001` |
+| `deluser <username>` | Deletes a user | `deluser alice` |
+| `listusers` | Lists stored users | `listusers` |
+| `addgroup <groupname> <gid>` | Creates a group | `addgroup students 100` |
+| `delgroup <groupname>` | Deletes a group | `delgroup students` |
+| `listgroups` | Lists stored groups | `listgroups` |
+| `exit` / `quit` | Exits the program | `exit` |
 
-Shows the available commands.
+## Planned or in-progress filesystem commands
 
-Example:
-
-```text
-help
-```
-
-Expected result: the simulator prints the command menu.
-
-### `adduser`
-
-Creates a new user.
-
-Example:
-
-```text
-adduser alice 1001
-```
-
-Expected result: user `alice` is created with UID `1001`.
-
-### `deluser`
-
-Deletes an existing user.
-
-Example:
-
-```text
-deluser alice
-```
-
-Expected result: user `alice` is removed.
-
-### `listusers`
-
-Lists the users currently stored in the simulator.
-
-Example:
-
-```text
-listusers
-```
-
-Expected result: the simulator displays the current user count/list information.
-
-### `addgroup`
-
-Creates a new group.
-
-Example:
-
-```text
-addgroup students 100
-```
-
-Expected result: group `students` is created with GID `100`.
-
-### `delgroup`
-
-Deletes an existing group.
-
-Example:
-
-```text
-delgroup students
-```
-
-Expected result: group `students` is removed.
-
-### `listgroups`
-
-Lists the groups currently stored in the simulator.
-
-Example:
-
-```text
-listgroups
-```
-
-Expected result: the simulator displays the current group count/list information.
-
-### `exit` / `quit`
-
-Exits the simulator.
-
-Example:
-
-```text
-exit
-```
-
-Expected result: the simulator closes.
-
-## Planned file permission commands
-
-These commands are not the main working commands yet, but they match the overall project goal.
+These commands match the larger file-permission simulator goal. Some file and directory class behavior exists, but these commands still need to be connected through the main command-line interface.
 
 | Command | Purpose |
 |---|---|
-| `mkdir` | create a directory |
-| `touch` | create a file |
-| `rmdir` | remove a directory |
-| `rm` | remove a file |
-| `chmod` | change permissions |
-| `chgrp` | change group ownership |
-| `ls -l` | list files/directories with permissions |
+| `mkdir` | Create a directory |
+| `rmdir` | Remove a directory |
+| `mkfil` | Create a file |
+| `rmfil` | Remove a file |
+| `cd` | Change/open directory |
+| `chmod` | Change permission value |
+| `chown` | Change owner |
+| `chgrp` | Change group ownership |
+
+## Notes
+
+The current user and group commands are important because file permissions depend on users, groups, UIDs, GIDs, owners, and group ownership. The filesystem commands will build on this foundation.

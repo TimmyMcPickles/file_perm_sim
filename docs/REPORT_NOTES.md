@@ -2,38 +2,25 @@
 
 ## Project summary
 
-Our project is a Unix-like file permission simulator written in C++. The goal is to show how users, groups, files, directories, and permissions work in a simulated environment.
+This project is a Unix-like file permission simulator written in C++. The goal is to show how an operating system can use users, groups, files, directories, ownership, and permission values to control access.
 
-The current version includes an interactive command-line interface with user and group management. The file and directory permission features are part of the larger project goal as the classes are connected together.
+The current version has an interactive command-line interface for user and group management. The file and directory classes support the larger goal of simulating permission behavior as those features are connected to the command-line interface.
 
-## Current features
+## Cybersecurity connection
 
-The simulator currently supports basic commands for:
+File permissions are part of access control. Access control is important because users should only be able to access the files and directories they are allowed to use.
 
-- adding users
-- deleting users
-- listing users
-- adding groups
-- deleting groups
-- listing groups
-- displaying help
-- exiting the program
+If permissions are too open, unauthorized users may be able to read, edit, or execute files. If permissions are too strict, authorized users may not be able to complete their work. This connects to the principle of least privilege, where users should only receive the access they need.
 
-The project also includes a CMake build setup.
+## Unix-style permission model
 
-## Why this matters
-
-File permissions are important in cybersecurity because they control who can access information. If permissions are too open, the wrong user may be able to view, edit, or run files. If permissions are too strict, the correct user may be blocked.
-
-## Basic permission model
-
-Unix-like systems use three permission categories:
+Unix-like systems commonly use three access categories:
 
 ```text
-owner group others
+owner   group   others
 ```
 
-Each category can have:
+Each category can have read, write, and execute permissions:
 
 ```text
 r = read
@@ -49,13 +36,13 @@ write = 2
 execute = 1
 ```
 
-Example:
+For example:
 
 ```text
 755
 ```
 
-Means:
+means:
 
 ```text
 owner: read, write, execute
@@ -63,34 +50,34 @@ group: read, execute
 others: read, execute
 ```
 
-## Files and directories
+## Files vs directories
 
-For files:
+Permissions mean different things depending on whether the item is a file or a directory.
 
-- read means view the file
-- write means edit the file
-- execute means run the file
+| Permission | File Meaning | Directory Meaning |
+|---|---|---|
+| Read | View file contents | List directory contents |
+| Write | Edit file contents | Add or remove items inside |
+| Execute | Run the file | Enter or move through the directory |
 
-For directories:
+This distinction is important because directory permissions control access to the folder structure itself, not just the files inside it.
 
-- read means list the directory
-- write means add or remove items inside
-- execute means enter or move through the directory
+## Project design notes
 
-## Project design
+The project is organized around classes that match the simulator idea:
 
-The project is separated into classes:
-
-| Class | Purpose |
+| Class | Role |
 |---|---|
-| `user` | stores user information |
-| `group` | stores group information |
-| `userList` | manages users |
-| `groupList` | manages groups |
-| `item` | stores shared ownership and permission information |
-| `file` | handles file actions |
-| `directory` | handles directory actions |
+| `user` | Stores user information |
+| `group` | Stores group information |
+| `userList` | Manages users |
+| `groupList` | Manages groups |
+| `item` | Stores shared ownership and permission information |
+| `file` | Represents file behavior |
+| `directory` | Represents directory behavior |
+
+This structure makes sense because files and directories share ownership and permission rules, but they handle actions differently.
 
 ## Conclusion
 
-This project connects to cybersecurity because permissions are a basic part of access control. The current version builds the user/group foundation, and the file/directory classes support the larger goal of simulating Unix-like file permissions.
+The project demonstrates how Unix-like permission rules can be modeled in C++. The current user and group commands provide the foundation, while the file and directory classes support the larger access-control simulation.
