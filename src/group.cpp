@@ -1,6 +1,8 @@
 // Ethan Prescott
 #include "group.hpp"
 
+group::group(){};
+
 group::group(std::string name, int id){
     groupName = name;
     gid = id;

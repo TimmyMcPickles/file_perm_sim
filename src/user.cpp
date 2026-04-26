@@ -7,6 +7,8 @@ user::user(std::string username, int id){
     setUsername(username);
 }
 
+user::user(){};
+
 std::string user::getUsername(){
     return username;
 }
