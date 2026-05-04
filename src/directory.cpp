@@ -120,9 +120,10 @@ void directory::displayPath() const {
     directory *current = getParent();
     output = slash + currentName;
     while (current != NULL) {
-        current->getParent();
+        currentName = current->getName();
         output = currentName + output;
         output = slash + output;
+        current = current->getParent();
     }
 
     std::cout << output << std::endl;

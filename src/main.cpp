@@ -34,6 +34,7 @@ void whoami(const std::vector<std::string>& args);
 
 void makeDir(const std::vector<std::string>& args);
 void pwd(const std::vector<std::string>& args);
+void list(const std::vector<std::string>& args);
 void back(const std::vector<std::string>& args);
 void removeDir(const std::vector<std::string>& args);
 void makeFil(const std::vector<std::string>& args);
@@ -59,11 +60,12 @@ void initializeCommands() {
     commands["quit"] = exitProgram;
 
     commands["login"] = login;
-    commands["joingroup"] = joingroup;
+    commands["joingrp"] = joingroup;
     commands["whoami"] = whoami; 
 
     commands["mkdir"] = makeDir;
     commands["pwd"] = pwd;
+    commands["ls"] = list;
     commands["backdir"] = back;
     commands["rmdir"] = removeDir;
     commands["mkfil"] = makeFil;
@@ -104,14 +106,30 @@ void processCommand(const std::string& input) {
 
 void displayHelp(const std::vector<std::string>& args) {
     std::cout << "\n=== Available Commands ===" << std::endl;
-    std::cout << "adduser <username> <uid>     - Create a new user" << std::endl;
-    std::cout << "addgroup <groupname> <gid>   - Create a new group" << std::endl;
-    std::cout << "listusers                    - Display all users" << std::endl;
-    std::cout << "listgroups                   - Display all groups" << std::endl;
-    std::cout << "deluser <username>           - Delete a user" << std::endl;
-    std::cout << "delgroup <groupname>         - Delete a group" << std::endl;
-    std::cout << "help                         - Display this help menu" << std::endl;
-    std::cout << "exit, quit                   - Exit the program" << std::endl;
+    std::cout << "adduser <username> <uid>                      - Create a new user" << std::endl;
+    std::cout << "addgroup <groupname> <gid>                    - Create a new group" << std::endl;
+    std::cout << "listusers                                     - Display all users" << std::endl;
+    std::cout << "listgroups                                    - Display all groups" << std::endl;
+    std::cout << "deluser <username>                            - Delete a user" << std::endl;
+    std::cout << "delgroup <groupname>                          - Delete a group" << std::endl;
+    std::cout << "help                                          - Display this help menu" << std::endl;
+    std::cout << "exit, quit                                    - Exit the program" << std::endl;
+
+    std::cout << "login <username>                              - Sign onto different user" << std::endl;
+    std::cout << "joingrp <groupname>                           - sign onto different group" << std::endl;
+    std::cout << "whoami                                        - Display current user and group" << std::endl;
+
+    std::cout << "mkdir <directoryname>                         - Create a new directory in current directory" << std::endl;
+    std::cout << "pwd                                           - Display current path" << std::endl;
+    std::cout << "ls                                            - Display a list of sub-directories and files" << std::endl;
+    std::cout << "backdir                                       - Return to parent directory" << std::endl;
+    std::cout << "rmdir <directoryname>                         - Delete a directory" << std::endl;
+    std::cout << "mkfil <filename>                              - Create a new file in current directory" << std::endl;
+    std::cout << "rmfil <filename>                              - Delete a file" << std::endl;
+    std::cout << "opendir <directoryname>                       - Opens directory" << std::endl;
+    std::cout << "chmod <directoryname/filename> <permissons>   - Change permission values of file or directory" << std::endl;
+    std::cout << "chown <directoryname/filename> <username>     - Change owner of file or directory" << std::endl;
+    std::cout << "chgrp <directoryname/filename> <groupname>    - Change owner group of file or directory" << std::endl;
     std::cout << "========================\n" << std::endl;
     (void)args;
 }
@@ -269,16 +287,17 @@ void joingroup(const std::vector<std::string>& args) {
 
     std::string groupname = args[1];
 
-    if (!userDB.userExists(groupname)) {
+    if (!groupDB.groupExists(groupname)) {
         std::cout << "Error: Group '" << groupname << "' does not exist." << std::endl;
         return;
     }
 
-    currentUser = userDB.getUser(groupname);
+    currentGroup = groupDB.getGroup(groupname);
     std::cout << "Successfully set group to " << groupname << std::endl;
 }
 
 void whoami(const std::vector<std::string>& args) {
+    (void)args;
     std::cout << "Logged in as " << currentUser->getUsername() << " under group " << currentGroup->getGroupName() << std::endl;
 }
 
@@ -297,6 +316,11 @@ void makeDir(const std::vector<std::string>& args) {
 
 void pwd(const std::vector<std::string>& args) {
     currentDir->displayPath();
+    (void)args;
+}
+
+void list(const std::vector<std::string>& args) {
+    currentDir->displayList(*currentUser, *currentGroup);
     (void)args;
 }
 
@@ -487,8 +511,8 @@ int main() {
         }
     }
     std::string rootname = "root";
-    directory root(rootname, *currentUser, *currentGroup, NULL);
-    *currentDir = root;
+    directory* root = new directory(rootname, *currentUser, *currentGroup, NULL);
+    currentDir = root;
 
 
     std::cout << "Type 'help' to see available commands." << std::endl;
