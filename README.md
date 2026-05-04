@@ -233,6 +233,8 @@ cmake -G "MinGW Makefiles" -DCMAKE_CXX_COMPILER=C:\MinGW\bin\g++.exe ..
 
 - Kayden McClung
 - Ethan Prescott
+- Christopher Farquer
+- Lee Carter
 
 ## License
 
