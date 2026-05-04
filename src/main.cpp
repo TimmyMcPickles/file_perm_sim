@@ -64,11 +64,11 @@ void initializeCommands() {
 
     commands["mkdir"] = makeDir;
     commands["pwd"] = pwd;
-    commands["back"] = back;
+    commands["backdir"] = back;
     commands["rmdir"] = removeDir;
     commands["mkfil"] = makeFil;
     commands["rmfil"] = removeFil;
-    commands["cd"] = openDir;
+    commands["opendir"] = openDir;
     commands["chmod"] = changePerm;
     commands["chown"] = changeOwn;
     commands["chgrp"] = changeGrp; 
@@ -341,28 +341,97 @@ void removeFil(const std::vector<std::string>& args) {
 
 void openDir(const std::vector<std::string>& args) {
     if (args.size() != 2) {
-        std::cout << "Error: Invalid syntax. Usage: cd <directoryname>" << std::endl;
+        std::cout << "Error: Invalid syntax. Usage: opendir <directoryname>" << std::endl;
         return;
     }
 
     std::string dirname = args[1];
-    if (currentDir->getSubDirectory(dirname) != NULL) {
-        currentDir = currentDir->getSubDirectory(dirname);
+    if (currentDir->getSubDirectory(dirname, *currentUser, *currentGroup) != NULL) {
+        currentDir = currentDir->getSubDirectory(dirname, *currentUser, *currentGroup);
         std::cout << "Successfully changed directory to " << dirname << std::endl; 
-    } else std::cout << "Error: " << dirname << " was not found." << std::endl;
+    }
     
 }
 
 void changePerm(const std::vector<std::string>& args) {
-    //TODO
+    if (args.size() != 3) {
+        std::cout << "Error: Invalid syntax. Usage: chmod <directoryname/filename> <permissionsValue>" << std::endl;
+        return;
+    }
+
+    std::string name = args[1];
+    int perms;
+
+    try {
+        perms = std::stoi(args[2]);
+    } catch (...) {
+        std::cout << "Error: UID must be a valid integer." << std::endl;
+        return;
+    }
+    
+    if (currentDir->findDirectory(name) != NULL) {
+        directory *temp = currentDir->findDirectory(name);
+        if (temp->getOwnerName() == currentUser->getUsername()) 
+            temp->setPerm(perms);
+        else std::cout << "Error: only owner can change permissions" << std::endl;
+    } else if (currentDir->findFile(name) != NULL) {
+        file *temp = currentDir->findFile(name);
+        if (temp->getOwnerName() == currentUser->getUsername()) 
+            temp->setPerm(perms);
+        else std::cout << "Error: only owner can change permissions" << std::endl;
+    } else std::cout << "Error: couldn't find file or directory named " << name << std::endl;
 }
 
 void changeOwn(const std::vector<std::string>& args) {
-    //TODO
+    if (args.size() != 3) {
+        std::cout << "Error: Invalid syntax. Usage: chown <directoryname/filename> <newownerusername>" << std::endl;
+        return;
+    }
+
+    std::string name = args[1];
+    std::string ownerName = args[2];
+    
+    if (currentDir->findDirectory(name) != NULL) {
+        directory *temp = currentDir->findDirectory(name);
+        if (temp->getOwnerName() == currentUser->getUsername()) {
+            user *newOwner = userDB.getUser(ownerName);
+            if (newOwner != nullptr) temp->setOwnerUser(*newOwner);
+            else std::cout << "Error: couldn't find user " << ownerName << std::endl;
+        } else std::cout << "Error: only owner can change ownership" << std::endl;
+    } else if (currentDir->findFile(name) != NULL) {
+        file *temp = currentDir->findFile(name);
+        if (temp->getOwnerName() == currentUser->getUsername()) {
+            user *newOwner = userDB.getUser(ownerName);
+            if (newOwner != nullptr) temp->setOwnerUser(*newOwner);
+            else std::cout << "Error: couldn't find user " << ownerName << std::endl;
+        } else std::cout << "Error: only owner can change ownership" << std::endl;
+    } else std::cout << "Error: couldn't find file or directory named " << name << std::endl;
 }
 
 void changeGrp(const std::vector<std::string>& args) {
-    //TODO
+    if (args.size() != 3) {
+        std::cout << "Error: Invalid syntax. Usage: chown <directoryname/filename> <newownerusername>" << std::endl;
+        return;
+    }
+
+    std::string name = args[1];
+    std::string gownerName = args[2];
+    
+    if (currentDir->findDirectory(name) != NULL) {
+        directory *temp = currentDir->findDirectory(name);
+        if (temp->getOwnerName() == currentUser->getUsername()) {
+            group *newOwner = groupDB.getGroup(gownerName);
+            if (newOwner != nullptr) temp->setOwnerGroup(*newOwner);
+            else std::cout << "Error: couldn't find group " << gownerName << std::endl;
+        } else std::cout << "Error: only owner can change ownership" << std::endl;
+    } else if (currentDir->findFile(name) != NULL) {
+        file *temp = currentDir->findFile(name);
+        if (temp->getOwnerName() == currentUser->getUsername()) {
+            group *newOwner = groupDB.getGroup(gownerName);
+            if (newOwner != nullptr) temp->setOwnerGroup(*newOwner);
+            else std::cout << "Error: couldn't find group " << gownerName << std::endl;
+        } else std::cout << "Error: only owner can change ownership" << std::endl;;
+    } else std::cout << "Error: couldn't find file or directory named " << name << std::endl;
 } 
 
 void initialLogin(const std::vector<std::string>& args) {

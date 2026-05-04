@@ -129,14 +129,41 @@ void directory::displayPath() const {
     return;
 }
 
-//returns pointer to specified subDirectory
-directory* directory::getSubDirectory(std::string dirName) {
+//returns pointer to specified subDirectory, specifically for open command
+directory* directory::getSubDirectory(std::string dirName, user& ownerUser,  group& ownerGroup) {
+    auto temp = std::find_if(subDirectoryList.begin(), subDirectoryList.end(), [&dirName](const directory* current) {
+        return current->getName() == dirName;
+    });
+
+    if (temp == subDirectoryList.end()) {
+        *temp = NULL;
+        std::cout << "Error: could not locate directory named " << dirName << std::endl;
+    }
+    else if (permCheck(ownerUser, ownerGroup, "x") == false) {
+        *temp = NULL;
+        std::cout << "Error: invalid permissions to open directory" << std::endl;
+    }
+    return *temp;
+}
+
+//searches list for directory and returns it, this should be reused for getsubdirectory but meh
+directory* directory::findDirectory(std::string dirName) {
     auto temp = std::find_if(subDirectoryList.begin(), subDirectoryList.end(), [&dirName](const directory* current) {
         return current->getName() == dirName;
     });
 
     if (temp == subDirectoryList.end()) *temp = NULL;
     return *temp;
+}
+
+//searches list for file and returns it
+file* directory::findFile(std::string filName) {
+    auto temp = std::find_if(fileList.begin(), fileList.end(), [&filName](const file* current) {
+        return current->getName() == filName;
+    });
+
+    if (temp == fileList.end()) *temp = NULL;
+    return *temp;   
 }
 
 //ensures no hanging pointer, empties lists and deletes objects in them.
