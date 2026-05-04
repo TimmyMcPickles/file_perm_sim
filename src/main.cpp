@@ -32,6 +32,10 @@ void login(const std::vector<std::string>& args);
 void joingroup(const std::vector<std::string>& args);
 void whoami(const std::vector<std::string>& args);
 
+void read(const std::vector<std::string>& args);
+void write(const std::vector<std::string>& args);
+void run(const std::vector<std::string>& args);
+
 void makeDir(const std::vector<std::string>& args);
 void pwd(const std::vector<std::string>& args);
 void list(const std::vector<std::string>& args);
@@ -62,6 +66,10 @@ void initializeCommands() {
     commands["login"] = login;
     commands["joingrp"] = joingroup;
     commands["whoami"] = whoami; 
+
+    commands["read"] = read; 
+    commands["write"] = write; 
+    commands["run"] = run; 
 
     commands["mkdir"] = makeDir;
     commands["pwd"] = pwd;
@@ -119,6 +127,10 @@ void displayHelp(const std::vector<std::string>& args) {
     std::cout << "joingrp <groupname>                           - sign onto different group" << std::endl;
     std::cout << "whoami                                        - Display current user and group" << std::endl;
 
+    std::cout << "read <filename>                               - Displays content of file" << std::endl;
+    std::cout << "write <filename>                              - Sets content of file" << std::endl;
+    std::cout << "read <filename>                               - Executes file" << std::endl;
+ 
     std::cout << "mkdir <directoryname>                         - Create a new directory in current directory" << std::endl;
     std::cout << "pwd                                           - Display current path" << std::endl;
     std::cout << "ls                                            - Display a list of sub-directories and files" << std::endl;
@@ -302,6 +314,47 @@ void whoami(const std::vector<std::string>& args) {
 }
 
 
+void read(const std::vector<std::string>& args) {
+    if (args.size() != 2) {
+        std::cout << "Error: Invalid syntax. Usage: read <filename>" << std::endl;
+        return;
+    }
+
+    std::string filename = args[1];
+
+    file *temp = currentDir->findFile(filename);
+    if (temp != NULL) temp->read(*currentUser, *currentGroup);
+    else std::cout << "Error: could not find file named " << filename << std::endl;
+}
+
+void write(const std::vector<std::string>& args) {
+    if (args.size() != 3) {
+        std::cout << "Error: Invalid syntax. Usage: write <filename> <content>" << std::endl;
+        return;
+    }
+
+    std::string filename = args[1];
+    std::string content = args[2];
+
+    file *temp = currentDir->findFile(filename);
+    if (temp != NULL) temp->write(content, *currentUser, *currentGroup);
+    else std::cout << "Error: could not find file named " << filename << std::endl;
+}
+
+void run(const std::vector<std::string>& args) {
+    if (args.size() != 2) {
+        std::cout << "Error: Invalid syntax. Usage: run <filename>" << std::endl;
+        return;
+    }
+
+    std::string filename = args[1];
+
+    file *temp = currentDir->findFile(filename);
+    if (temp != NULL) temp->execute(*currentUser, *currentGroup);
+    else std::cout << "Error: could not find file named " << filename << std::endl;
+}
+
+
 
 void makeDir(const std::vector<std::string>& args) {
     if (args.size() != 2) {
@@ -340,6 +393,7 @@ void removeDir(const std::vector<std::string>& args) {
     }
 
     std::string dirname = args[1];
+    
     currentDir->delDirectory(dirname, *currentUser, *currentGroup);
 }
 
@@ -371,8 +425,11 @@ void openDir(const std::vector<std::string>& args) {
 
     std::string dirname = args[1];
     if (currentDir->getSubDirectory(dirname, *currentUser, *currentGroup) != NULL) {
-        currentDir = currentDir->getSubDirectory(dirname, *currentUser, *currentGroup);
-        std::cout << "Successfully changed directory to " << dirname << std::endl; 
+        directory *temp = currentDir->getSubDirectory(dirname, *currentUser, *currentGroup);
+        if (temp->permCheck(*currentUser, *currentGroup, "x")) {
+            currentDir = temp;
+            std::cout << "Successfully changed directory to " << dirname << std::endl; 
+        } else std::cout << "Error: invalid permissions" << std::endl;
     }
     
 }
