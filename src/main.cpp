@@ -32,8 +32,13 @@ void login(const std::vector<std::string>& args);
 void joingroup(const std::vector<std::string>& args);
 void whoami(const std::vector<std::string>& args);
 
+void read(const std::vector<std::string>& args);
+void write(const std::vector<std::string>& args);
+void run(const std::vector<std::string>& args);
+
 void makeDir(const std::vector<std::string>& args);
 void pwd(const std::vector<std::string>& args);
+void list(const std::vector<std::string>& args);
 void back(const std::vector<std::string>& args);
 void removeDir(const std::vector<std::string>& args);
 void makeFil(const std::vector<std::string>& args);
@@ -59,16 +64,21 @@ void initializeCommands() {
     commands["quit"] = exitProgram;
 
     commands["login"] = login;
-    commands["joingroup"] = joingroup;
+    commands["joingrp"] = joingroup;
     commands["whoami"] = whoami; 
+
+    commands["read"] = read; 
+    commands["write"] = write; 
+    commands["run"] = run; 
 
     commands["mkdir"] = makeDir;
     commands["pwd"] = pwd;
-    commands["back"] = back;
+    commands["ls"] = list;
+    commands["backdir"] = back;
     commands["rmdir"] = removeDir;
     commands["mkfil"] = makeFil;
     commands["rmfil"] = removeFil;
-    commands["cd"] = openDir;
+    commands["opendir"] = openDir;
     commands["chmod"] = changePerm;
     commands["chown"] = changeOwn;
     commands["chgrp"] = changeGrp; 
@@ -104,14 +114,34 @@ void processCommand(const std::string& input) {
 
 void displayHelp(const std::vector<std::string>& args) {
     std::cout << "\n=== Available Commands ===" << std::endl;
-    std::cout << "adduser <username> <uid>     - Create a new user" << std::endl;
-    std::cout << "addgroup <groupname> <gid>   - Create a new group" << std::endl;
-    std::cout << "listusers                    - Display all users" << std::endl;
-    std::cout << "listgroups                   - Display all groups" << std::endl;
-    std::cout << "deluser <username>           - Delete a user" << std::endl;
-    std::cout << "delgroup <groupname>         - Delete a group" << std::endl;
-    std::cout << "help                         - Display this help menu" << std::endl;
-    std::cout << "exit, quit                   - Exit the program" << std::endl;
+    std::cout << "adduser <username> <uid>                      - Create a new user" << std::endl;
+    std::cout << "addgroup <groupname> <gid>                    - Create a new group" << std::endl;
+    std::cout << "listusers                                     - Display all users" << std::endl;
+    std::cout << "listgroups                                    - Display all groups" << std::endl;
+    std::cout << "deluser <username>                            - Delete a user" << std::endl;
+    std::cout << "delgroup <groupname>                          - Delete a group" << std::endl;
+    std::cout << "help                                          - Display this help menu" << std::endl;
+    std::cout << "exit, quit                                    - Exit the program" << std::endl;
+
+    std::cout << "login <username>                              - Sign onto different user" << std::endl;
+    std::cout << "joingrp <groupname>                           - sign onto different group" << std::endl;
+    std::cout << "whoami                                        - Display current user and group" << std::endl;
+
+    std::cout << "read <filename>                               - Displays content of file" << std::endl;
+    std::cout << "write <filename>                              - Sets content of file" << std::endl;
+    std::cout << "read <filename>                               - Executes file" << std::endl;
+ 
+    std::cout << "mkdir <directoryname>                         - Create a new directory in current directory" << std::endl;
+    std::cout << "pwd                                           - Display current path" << std::endl;
+    std::cout << "ls                                            - Display a list of sub-directories and files" << std::endl;
+    std::cout << "backdir                                       - Return to parent directory" << std::endl;
+    std::cout << "rmdir <directoryname>                         - Delete a directory" << std::endl;
+    std::cout << "mkfil <filename>                              - Create a new file in current directory" << std::endl;
+    std::cout << "rmfil <filename>                              - Delete a file" << std::endl;
+    std::cout << "opendir <directoryname>                       - Opens directory" << std::endl;
+    std::cout << "chmod <directoryname/filename> <permissons>   - Change permission values of file or directory" << std::endl;
+    std::cout << "chown <directoryname/filename> <username>     - Change owner of file or directory" << std::endl;
+    std::cout << "chgrp <directoryname/filename> <groupname>    - Change owner group of file or directory" << std::endl;
     std::cout << "========================\n" << std::endl;
     (void)args;
 }
@@ -269,17 +299,59 @@ void joingroup(const std::vector<std::string>& args) {
 
     std::string groupname = args[1];
 
-    if (!userDB.userExists(groupname)) {
+    if (!groupDB.groupExists(groupname)) {
         std::cout << "Error: Group '" << groupname << "' does not exist." << std::endl;
         return;
     }
 
-    currentUser = userDB.getUser(groupname);
+    currentGroup = groupDB.getGroup(groupname);
     std::cout << "Successfully set group to " << groupname << std::endl;
 }
 
 void whoami(const std::vector<std::string>& args) {
+    (void)args;
     std::cout << "Logged in as " << currentUser->getUsername() << " under group " << currentGroup->getGroupName() << std::endl;
+}
+
+
+void read(const std::vector<std::string>& args) {
+    if (args.size() != 2) {
+        std::cout << "Error: Invalid syntax. Usage: read <filename>" << std::endl;
+        return;
+    }
+
+    std::string filename = args[1];
+
+    file *temp = currentDir->findFile(filename);
+    if (temp != NULL) temp->read(*currentUser, *currentGroup);
+    else std::cout << "Error: could not find file named " << filename << std::endl;
+}
+
+void write(const std::vector<std::string>& args) {
+    if (args.size() != 3) {
+        std::cout << "Error: Invalid syntax. Usage: write <filename> <content>" << std::endl;
+        return;
+    }
+
+    std::string filename = args[1];
+    std::string content = args[2];
+
+    file *temp = currentDir->findFile(filename);
+    if (temp != NULL) temp->write(content, *currentUser, *currentGroup);
+    else std::cout << "Error: could not find file named " << filename << std::endl;
+}
+
+void run(const std::vector<std::string>& args) {
+    if (args.size() != 2) {
+        std::cout << "Error: Invalid syntax. Usage: run <filename>" << std::endl;
+        return;
+    }
+
+    std::string filename = args[1];
+
+    file *temp = currentDir->findFile(filename);
+    if (temp != NULL) temp->execute(*currentUser, *currentGroup);
+    else std::cout << "Error: could not find file named " << filename << std::endl;
 }
 
 
@@ -300,6 +372,11 @@ void pwd(const std::vector<std::string>& args) {
     (void)args;
 }
 
+void list(const std::vector<std::string>& args) {
+    currentDir->displayList(*currentUser, *currentGroup);
+    (void)args;
+}
+
 void back(const std::vector<std::string>& args) {
     if (currentDir->getParent() != NULL){
         currentDir = currentDir->getParent();
@@ -316,6 +393,7 @@ void removeDir(const std::vector<std::string>& args) {
     }
 
     std::string dirname = args[1];
+    
     currentDir->delDirectory(dirname, *currentUser, *currentGroup);
 }
 
@@ -341,28 +419,100 @@ void removeFil(const std::vector<std::string>& args) {
 
 void openDir(const std::vector<std::string>& args) {
     if (args.size() != 2) {
-        std::cout << "Error: Invalid syntax. Usage: cd <directoryname>" << std::endl;
+        std::cout << "Error: Invalid syntax. Usage: opendir <directoryname>" << std::endl;
         return;
     }
 
     std::string dirname = args[1];
-    if (currentDir->getSubDirectory(dirname) != NULL) {
-        currentDir = currentDir->getSubDirectory(dirname);
-        std::cout << "Successfully changed directory to " << dirname << std::endl; 
-    } else std::cout << "Error: " << dirname << " was not found." << std::endl;
+    if (currentDir->getSubDirectory(dirname, *currentUser, *currentGroup) != NULL) {
+        directory *temp = currentDir->getSubDirectory(dirname, *currentUser, *currentGroup);
+        if (temp->permCheck(*currentUser, *currentGroup, "x")) {
+            currentDir = temp;
+            std::cout << "Successfully changed directory to " << dirname << std::endl; 
+        } else std::cout << "Error: invalid permissions" << std::endl;
+    }
     
 }
 
 void changePerm(const std::vector<std::string>& args) {
-    //TODO
+    if (args.size() != 3) {
+        std::cout << "Error: Invalid syntax. Usage: chmod <directoryname/filename> <permissionsValue>" << std::endl;
+        return;
+    }
+
+    std::string name = args[1];
+    int perms;
+
+    try {
+        perms = std::stoi(args[2]);
+    } catch (...) {
+        std::cout << "Error: UID must be a valid integer." << std::endl;
+        return;
+    }
+    
+    if (currentDir->findDirectory(name) != NULL) {
+        directory *temp = currentDir->findDirectory(name);
+        if (temp->getOwnerName() == currentUser->getUsername()) 
+            temp->setPerm(perms);
+        else std::cout << "Error: only owner can change permissions" << std::endl;
+    } else if (currentDir->findFile(name) != NULL) {
+        file *temp = currentDir->findFile(name);
+        if (temp->getOwnerName() == currentUser->getUsername()) 
+            temp->setPerm(perms);
+        else std::cout << "Error: only owner can change permissions" << std::endl;
+    } else std::cout << "Error: couldn't find file or directory named " << name << std::endl;
 }
 
 void changeOwn(const std::vector<std::string>& args) {
-    //TODO
+    if (args.size() != 3) {
+        std::cout << "Error: Invalid syntax. Usage: chown <directoryname/filename> <newownerusername>" << std::endl;
+        return;
+    }
+
+    std::string name = args[1];
+    std::string ownerName = args[2];
+    
+    if (currentDir->findDirectory(name) != NULL) {
+        directory *temp = currentDir->findDirectory(name);
+        if (temp->getOwnerName() == currentUser->getUsername()) {
+            user *newOwner = userDB.getUser(ownerName);
+            if (newOwner != nullptr) temp->setOwnerUser(*newOwner);
+            else std::cout << "Error: couldn't find user " << ownerName << std::endl;
+        } else std::cout << "Error: only owner can change ownership" << std::endl;
+    } else if (currentDir->findFile(name) != NULL) {
+        file *temp = currentDir->findFile(name);
+        if (temp->getOwnerName() == currentUser->getUsername()) {
+            user *newOwner = userDB.getUser(ownerName);
+            if (newOwner != nullptr) temp->setOwnerUser(*newOwner);
+            else std::cout << "Error: couldn't find user " << ownerName << std::endl;
+        } else std::cout << "Error: only owner can change ownership" << std::endl;
+    } else std::cout << "Error: couldn't find file or directory named " << name << std::endl;
 }
 
 void changeGrp(const std::vector<std::string>& args) {
-    //TODO
+    if (args.size() != 3) {
+        std::cout << "Error: Invalid syntax. Usage: chown <directoryname/filename> <newownerusername>" << std::endl;
+        return;
+    }
+
+    std::string name = args[1];
+    std::string gownerName = args[2];
+    
+    if (currentDir->findDirectory(name) != NULL) {
+        directory *temp = currentDir->findDirectory(name);
+        if (temp->getOwnerName() == currentUser->getUsername()) {
+            group *newOwner = groupDB.getGroup(gownerName);
+            if (newOwner != nullptr) temp->setOwnerGroup(*newOwner);
+            else std::cout << "Error: couldn't find group " << gownerName << std::endl;
+        } else std::cout << "Error: only owner can change ownership" << std::endl;
+    } else if (currentDir->findFile(name) != NULL) {
+        file *temp = currentDir->findFile(name);
+        if (temp->getOwnerName() == currentUser->getUsername()) {
+            group *newOwner = groupDB.getGroup(gownerName);
+            if (newOwner != nullptr) temp->setOwnerGroup(*newOwner);
+            else std::cout << "Error: couldn't find group " << gownerName << std::endl;
+        } else std::cout << "Error: only owner can change ownership" << std::endl;;
+    } else std::cout << "Error: couldn't find file or directory named " << name << std::endl;
 } 
 
 void initialLogin(const std::vector<std::string>& args) {
@@ -418,8 +568,8 @@ int main() {
         }
     }
     std::string rootname = "root";
-    directory root(rootname, *currentUser, *currentGroup, NULL);
-    *currentDir = root;
+    directory* root = new directory(rootname, *currentUser, *currentGroup, NULL);
+    currentDir = root;
 
 
     std::cout << "Type 'help' to see available commands." << std::endl;

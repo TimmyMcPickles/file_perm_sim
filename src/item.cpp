@@ -80,14 +80,17 @@ bool item::permCheck(user& currentUser, group& currentGroup, std::string permTyp
 
     int permValue = getPerm();
     if (currentUser.getUID() == getOwnerUID()) {
+       // std::cout << "same user" << std::endl;
         permValue = permValue - (permValue % 10);
         permValue /= 10;
         permValue = permValue - (permValue % 10);
         permValue /=10;
     } else if (currentGroup.getGID() == getOwnerGID()){
+        //std::cout << "same group" << std::endl;
         permValue = permValue - (permValue % 10);
         permValue /= 10;
-    }
+        permValue = (permValue % 10);
+    } else permValue = (permValue % 10);
 
 
     //figures out what permissions it has
