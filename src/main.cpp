@@ -65,11 +65,11 @@ void initializeCommands() {
 
     commands["login"] = login;
     commands["joingrp"] = joingroup;
-    commands["whoami"] = whoami; 
+    commands["whoami"] = whoami;
 
-    commands["read"] = read; 
-    commands["write"] = write; 
-    commands["run"] = run; 
+    commands["read"] = read;
+    commands["write"] = write;
+    commands["run"] = run;
 
     commands["mkdir"] = makeDir;
     commands["pwd"] = pwd;
@@ -81,7 +81,7 @@ void initializeCommands() {
     commands["opendir"] = openDir;
     commands["chmod"] = changePerm;
     commands["chown"] = changeOwn;
-    commands["chgrp"] = changeGrp; 
+    commands["chgrp"] = changeGrp;
 }
 
 std::vector<std::string> parseCommand(const std::string& input) {
@@ -129,8 +129,8 @@ void displayHelp(const std::vector<std::string>& args) {
 
     std::cout << "read <filename>                               - Displays content of file" << std::endl;
     std::cout << "write <filename>                              - Sets content of file" << std::endl;
-    std::cout << "read <filename>                               - Executes file" << std::endl;
- 
+    std::cout << "run <filename>                               - Executes file" << std::endl;
+
     std::cout << "mkdir <directoryname>                         - Create a new directory in current directory" << std::endl;
     std::cout << "pwd                                           - Display current path" << std::endl;
     std::cout << "ls                                            - Display a list of sub-directories and files" << std::endl;
@@ -393,7 +393,7 @@ void removeDir(const std::vector<std::string>& args) {
     }
 
     std::string dirname = args[1];
-    
+
     currentDir->delDirectory(dirname, *currentUser, *currentGroup);
 }
 
@@ -428,10 +428,10 @@ void openDir(const std::vector<std::string>& args) {
         directory *temp = currentDir->getSubDirectory(dirname, *currentUser, *currentGroup);
         if (temp->permCheck(*currentUser, *currentGroup, "x")) {
             currentDir = temp;
-            std::cout << "Successfully changed directory to " << dirname << std::endl; 
+            std::cout << "Successfully changed directory to " << dirname << std::endl;
         } else std::cout << "Error: invalid permissions" << std::endl;
     }
-    
+
 }
 
 void changePerm(const std::vector<std::string>& args) {
@@ -449,15 +449,15 @@ void changePerm(const std::vector<std::string>& args) {
         std::cout << "Error: UID must be a valid integer." << std::endl;
         return;
     }
-    
+
     if (currentDir->findDirectory(name) != NULL) {
         directory *temp = currentDir->findDirectory(name);
-        if (temp->getOwnerName() == currentUser->getUsername()) 
+        if (temp->getOwnerName() == currentUser->getUsername())
             temp->setPerm(perms);
         else std::cout << "Error: only owner can change permissions" << std::endl;
     } else if (currentDir->findFile(name) != NULL) {
         file *temp = currentDir->findFile(name);
-        if (temp->getOwnerName() == currentUser->getUsername()) 
+        if (temp->getOwnerName() == currentUser->getUsername())
             temp->setPerm(perms);
         else std::cout << "Error: only owner can change permissions" << std::endl;
     } else std::cout << "Error: couldn't find file or directory named " << name << std::endl;
@@ -471,7 +471,7 @@ void changeOwn(const std::vector<std::string>& args) {
 
     std::string name = args[1];
     std::string ownerName = args[2];
-    
+
     if (currentDir->findDirectory(name) != NULL) {
         directory *temp = currentDir->findDirectory(name);
         if (temp->getOwnerName() == currentUser->getUsername()) {
@@ -497,7 +497,7 @@ void changeGrp(const std::vector<std::string>& args) {
 
     std::string name = args[1];
     std::string gownerName = args[2];
-    
+
     if (currentDir->findDirectory(name) != NULL) {
         directory *temp = currentDir->findDirectory(name);
         if (temp->getOwnerName() == currentUser->getUsername()) {
@@ -513,7 +513,7 @@ void changeGrp(const std::vector<std::string>& args) {
             else std::cout << "Error: couldn't find group " << gownerName << std::endl;
         } else std::cout << "Error: only owner can change ownership" << std::endl;;
     } else std::cout << "Error: couldn't find file or directory named " << name << std::endl;
-} 
+}
 
 void initialLogin(const std::vector<std::string>& args) {
     if (args.size() != 2) {
