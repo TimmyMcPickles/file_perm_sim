@@ -86,12 +86,26 @@ void initializeCommands() {
 
 std::vector<std::string> parseCommand(const std::string& input) {
     std::vector<std::string> tokens;
-    std::istringstream iss(input);
     std::string token;
+    bool inQuotes = false;
 
-    while (iss >> token) {
+    for (char c : input) {
+        if (c == '"') {
+            inQuotes = !inQuotes;
+        } else if (c == ' ' && !inQuotes) {
+            if (!token.empty()) {
+                tokens.push_back(token);
+                token.clear();
+            }
+        } else {
+            token += c;
+        }
+    }
+
+    if (!token.empty()) {
         tokens.push_back(token);
     }
+
     return tokens;
 }
 
